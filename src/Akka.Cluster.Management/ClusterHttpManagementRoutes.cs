@@ -157,6 +157,7 @@ namespace Akka.Cluster.Http.Management
                     if (member != null)
                     {
                         Sender.Tell(new Complete.Success(MemberToClusterMember(member)));
+                        return;
                     }
 
                     Sender.Tell(new Complete.Failure($"Member {msg.Address.ToString()} not found"));
@@ -173,6 +174,7 @@ namespace Akka.Cluster.Http.Management
                     {
                         cluster.Down(msg.Address);
                         Sender.Tell(new Complete.Success($"Downing {msg.Address.ToString()}"));
+                        return;
                     }
 
                     Sender.Tell(new Complete.Failure($"Member {msg.Address.ToString()} not found"));
@@ -184,6 +186,7 @@ namespace Akka.Cluster.Http.Management
                     {
                         cluster.Leave(msg.Address);
                         Sender.Tell(new Complete.Success($"Leaving {msg.Address.ToString()}"));
+                        return;
                     }
 
                     Sender.Tell(new Complete.Failure($"Member {msg.Address.ToString()} not found"));

@@ -129,7 +129,6 @@ Where the <node-url> should be on the format of
             app.HelpOption("-?|-h|--help");
             app.OnExecute(() =>
             {
-                app.DisplayAsciiArtAsync().Wait(cancellationTokenSource.Token);
                 app.ShowHelp();
                 return 1;
             });
