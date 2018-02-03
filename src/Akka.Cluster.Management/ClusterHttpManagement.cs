@@ -9,6 +9,7 @@ using Owin;
 
 namespace Akka.Cluster.Http.Management
 {
+    /// <inheritdoc />
     /// <summary>
     /// Class to instantiate an {Akka.Cluster.Http.Management.ClusterHttpManagement} to provide an HTTP management interface for {Akka.Cluster.Cluster}.
     /// </summary>
@@ -19,6 +20,7 @@ namespace Akka.Cluster.Http.Management
 
         public ClusterHttpManagementSettings Settings { get; }
 
+        /// <inheritdoc />
         /// <summary>
         /// Creates an instance of {Akka.Cluster.Http.Management.ClusterHttpManagement} to manage the specified {Akka.Cluster.Cluster} instance. 
         /// This version does not provide security (Basic Authentication or SSL) and uses the default path "members".

@@ -12,6 +12,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{1407C8E9-DAA4-464B-BE67-213BCFDF7D2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Cluster.Management.Host", "examples\Akka.Cluster.Management.Host\Akka.Cluster.Management.Host.csproj", "{56F1F913-97F9-4252-820E-7358147B1A8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +30,16 @@ Global
 		{99A1864A-E1F3-466C-B12C-A30EC554C867}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99A1864A-E1F3-466C-B12C-A30EC554C867}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99A1864A-E1F3-466C-B12C-A30EC554C867}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56F1F913-97F9-4252-820E-7358147B1A8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56F1F913-97F9-4252-820E-7358147B1A8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56F1F913-97F9-4252-820E-7358147B1A8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56F1F913-97F9-4252-820E-7358147B1A8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{56F1F913-97F9-4252-820E-7358147B1A8C} = {1407C8E9-DAA4-464B-BE67-213BCFDF7D2F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {15301095-C152-475E-AE18-B5F446DCFCDD}
