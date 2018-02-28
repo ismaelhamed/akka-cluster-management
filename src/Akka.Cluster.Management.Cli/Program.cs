@@ -5,8 +5,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
+using Akka.Cluster.Management.Cli.Models;
 using Akka.Cluster.Management.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
+using Console = Colorful.Console;
 
 namespace Akka.Cluster.Management.Cli
 {
@@ -23,12 +25,12 @@ namespace Akka.Cluster.Management.Cli
             var app = new CommandLineApplication(throwOnUnexpectedArg: false)
             {
                 Name = "akka-cluster",
-                FullName = "Akka Cluster Http Management CLI",
-                ShortVersionGetter = () => "0.2.0",
+                FullName = "Akka Management Cluster HTTP",
+                ShortVersionGetter = () => "0.6.0",
                 ExtendedHelpText = @"
 Examples: 
-    akka-cluster join <node-url>
-    akka-cluster members
+  akka-cluster members
+  akka-cluster down <node-url>    
 
 Where the <node-url> should be on the format of
   'akka.<protocol>://<actor-system-name>@<hostname>:<port>'
@@ -129,6 +131,7 @@ Where the <node-url> should be on the format of
             app.HelpOption("-?|-h|--help");
             app.OnExecute(() =>
             {
+                app.DisplayAsciiArt();
                 app.ShowHelp();
                 return 1;
             });
@@ -167,7 +170,7 @@ Where the <node-url> should be on the format of
                     var response = await client.PostAsync("/members", encodedContent);
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<Models.ClusterHttpManagementMessage>();
+                        var result = await response.Content.ReadAsAsync<ClusterHttpManagementMessage>();
                         Console.WriteLine(result.Message);
                     }
 
@@ -192,7 +195,7 @@ Where the <node-url> should be on the format of
                     var response = await client.PutAsync("/members", encodedContent);
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<Models.ClusterHttpManagementMessage>();
+                        var result = await response.Content.ReadAsAsync<ClusterHttpManagementMessage>();
                         Console.WriteLine(result.Message);
                     }
 
@@ -217,7 +220,7 @@ Where the <node-url> should be on the format of
                     var response = await client.PutAsync("/members", encodedContent);
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<Models.ClusterHttpManagementMessage>();
+                        var result = await response.Content.ReadAsAsync<ClusterHttpManagementMessage>();
                         Console.WriteLine(result.Message);
                     }
                 }
@@ -237,7 +240,7 @@ Where the <node-url> should be on the format of
                     var response = await client.GetAsync("/members");
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<Models.ClusterMembers>();
+                        var result = await response.Content.ReadAsAsync<ClusterMembers>();
 
                         var members = result.Unreachable.Select(member => new Tuple<string, string, string>(member.Node, "Unreachable", "")).ToList();
                         foreach (var re in result.Members.Select(member => new Tuple<string, string, string>(member.Node, member.Status, string.Join(",", member.Roles))))
@@ -246,7 +249,7 @@ Where the <node-url> should be on the format of
                                 members.Add(new Tuple<string, string, string>(re.Item1, re.Item2, re.Item3));
                         }
 
-                        var table = new ConsoleTable(new[] { "Node", "Status", "Roles" }, new ConsoleTableSettings());
+                        var table = new ConsoleTable(new[] { "NODE", "STATUS", "ROLES" }, new ConsoleTableSettings());
                         members.OrderBy(m => m.Item1).ToList().ForEach(member => table.AddRow(new[] { member.Item1, member.Item2, member.Item3 }));
                         table.WriteToConsole();
                     }
@@ -267,10 +270,10 @@ Where the <node-url> should be on the format of
                     var response = await client.GetAsync("/members");
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<Models.ClusterMembers>();
+                        var result = await response.Content.ReadAsAsync<ClusterMembers>();
                         if (result.Unreachable.Any())
                         {
-                            var table = new ConsoleTable(new[] { "Node" }, new ConsoleTableSettings());
+                            var table = new ConsoleTable(new[] { "NODE" }, new ConsoleTableSettings());
                             Array.ForEach(result.Unreachable, member => table.AddRow(new[] { member.Node }));
                             table.WriteToConsole();
                         }

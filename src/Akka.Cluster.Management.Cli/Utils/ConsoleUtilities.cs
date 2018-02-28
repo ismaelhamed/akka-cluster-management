@@ -14,8 +14,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
+using Colorful;
+using Console = Colorful.Console;
 
 namespace Akka.Cluster.Management.Cli.Utils
 {
@@ -35,10 +38,10 @@ namespace Akka.Cluster.Management.Cli.Utils
 
     public class ConsoleTable
     {
-        private readonly StringBuilder table;
         private readonly string[] columnHeadings;
         private readonly ConsoleTableSettings settings;
-        private readonly List<List<string>> rows;
+        private readonly StringBuilder table = new StringBuilder();
+        private readonly List<List<string>> rows = new List<List<string>>();
 
         public ConsoleTable(IEnumerable<string> columnHeadings)
             : this(columnHeadings, new ConsoleTableSettings())
@@ -48,8 +51,6 @@ namespace Akka.Cluster.Management.Cli.Utils
         {
             this.columnHeadings = columnHeadings.ToArray();
             this.settings = settings;
-            this.table = new StringBuilder();
-            this.rows = new List<List<string>>();
         }
 
         public void AddRow(IEnumerable<string> row)
@@ -65,8 +66,13 @@ namespace Akka.Cluster.Management.Cli.Utils
 
         public void WriteToConsole()
         {
-            var columnWidths = GetColumnWidths();
+            var currentLineCursor = Console.CursorTop;
+            Console.SetCursorPosition(0, 2);
+            for (var i = 0; i < currentLineCursor; i++)
+                Console.Write(new string(' ', Console.WindowWidth));
+            Console.SetCursorPosition(0, 2);
 
+            var columnWidths = GetColumnWidths();
             BuildRow(columnWidths, new string[] { });
             BuildRow(columnWidths, columnHeadings);
             BuildRow(columnWidths, new string[] { });
@@ -75,35 +81,36 @@ namespace Akka.Cluster.Management.Cli.Utils
             {
                 BuildRow(columnWidths, row.ToArray());
             }
-
-            Console.Write(table.ToString());
             Console.WriteLine("");
         }
 
         private void BuildRow(IReadOnlyList<int> columnWidths, IReadOnlyList<string> rowValues)
         {
+            //var styleSheet = new StyleSheet(Color.White);
+            //styleSheet.AddStyle("Unreachable", Color.Crimson);
+
             var row = string.Empty;
             if (rowValues.Count > 0)
             {
                 for (var i = 0; i < columnWidths.Count; i++)
                 {
-                    row += settings.FieldDelimiter
-                        + rowValues[i].PadRight(columnWidths[i]) 
-                        + string.Empty.PadRight(settings.Padding, ' ');
+                    var columnValue = rowValues[i];
 
-                    if (i == rowValues.Count - 1)
-                    {
-                        row += settings.FieldDelimiter;
-                    }
+                    Console.Write(settings.FieldDelimiter);
+                    Console.Write(columnValue);
+                    //Console.WriteStyled(columnValue, styleSheet);
+                    Console.Write(string.Empty.PadRight(columnWidths[i] - columnValue.Length));
+                    Console.Write(string.Empty.PadRight(settings.Padding, ' '));
                 }
+                Console.WriteLine("");
             }
             else
             {
                 row = columnWidths.Aggregate(row, (current, t) => current 
                     + char.ToString(settings.RowDelimiter).PadRight(t + settings.Padding * 2, settings.RowDelimiter)
                     + char.ToString(settings.RowDelimiter));
+                Console.WriteLine(row);
             }
-            table.AppendLine(row);
         }
 
         private int[] GetColumnWidths()
