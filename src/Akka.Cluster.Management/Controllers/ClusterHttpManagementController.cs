@@ -21,10 +21,7 @@ namespace Akka.Cluster.Http.Management.Controllers
                 var response = await SystemActors.RoutesHandler.Ask<Complete>(new GetMembers(), TimeSpan.FromSeconds(5));
                 return response.Match<IHttpActionResult>()
                     .With<Complete.Success>(success => Ok(success.Result))
-                    .ResultOrDefault(_ =>
-                    {
-                        throw new InvalidOperationException("Unexpected response from ClusterHttpManagementRoutes");
-                    });
+                    .ResultOrDefault(_ => throw new InvalidOperationException("Unexpected response from ClusterHttpManagementRoutes"));
             }
             catch (Exception)
             {
@@ -45,10 +42,7 @@ namespace Akka.Cluster.Http.Management.Controllers
                 return response.Match<IHttpActionResult>()
                     .With<Complete.Success>(success => Ok(success.Result))
                     .With<Complete.Failure>(failure => Content(HttpStatusCode.NotFound, new ClusterHttpManagementMessage(failure.Reason)))
-                    .ResultOrDefault(_ =>
-                    {
-                        throw new InvalidOperationException("Unexpected response from ClusterHttpManagementRoutes");
-                    });
+                    .ResultOrDefault(_ => throw new InvalidOperationException("Unexpected response from ClusterHttpManagementRoutes"));
             }
             catch (Exception)
             {
@@ -68,10 +62,7 @@ namespace Akka.Cluster.Http.Management.Controllers
                 var response = await SystemActors.RoutesHandler.Ask<Complete>(new JoinMember(Address.Parse(formData["address"])), TimeSpan.FromSeconds(5));
                 return response.Match<IHttpActionResult>()
                     .With<Complete.Success>(success => Ok(new ClusterHttpManagementMessage(success.Result.ToString())))
-                    .ResultOrDefault(_ =>
-                    {
-                        throw new InvalidOperationException("Unexpected response from ClusterHttpManagementRoutes");
-                    });
+                    .ResultOrDefault(_ => throw new InvalidOperationException("Unexpected response from ClusterHttpManagementRoutes"));
             }
             catch (Exception)
             {
@@ -92,10 +83,7 @@ namespace Akka.Cluster.Http.Management.Controllers
                 return response.Match<IHttpActionResult>()
                     .With<Complete.Success>(success => Ok(new ClusterHttpManagementMessage(success.Result.ToString())))
                     .With<Complete.Failure>(failure => Content(HttpStatusCode.NotFound, new ClusterHttpManagementMessage(failure.Reason)))
-                    .ResultOrDefault(_ =>
-                    {
-                        throw new InvalidOperationException("Unexpected response from ClusterHttpManagementRoutes");
-                    });
+                    .ResultOrDefault(_ => throw new InvalidOperationException("Unexpected response from ClusterHttpManagementRoutes"));
             }
             catch (Exception)
             {
@@ -130,10 +118,7 @@ namespace Akka.Cluster.Http.Management.Controllers
                 return response.Match<IHttpActionResult>()
                     .With<Complete.Success>(success => Ok(new ClusterHttpManagementMessage(success.Result.ToString())))
                     .With<Complete.Failure>(failure => Content(HttpStatusCode.NotFound, new ClusterHttpManagementMessage(failure.Reason)))
-                    .ResultOrDefault(_ =>
-                    {
-                        throw new InvalidOperationException("Unexpected response from ClusterHttpManagementRoutes");
-                    });
+                    .ResultOrDefault(_ => throw new InvalidOperationException("Unexpected response from ClusterHttpManagementRoutes"));
             }
             catch (Exception)
             {

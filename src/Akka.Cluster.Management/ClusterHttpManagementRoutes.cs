@@ -1,4 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Dynamic;
+using System.Linq;
+using System.Reflection;
 using Akka.Actor;
 
 namespace Akka.Cluster.Http.Management
@@ -143,9 +148,19 @@ namespace Akka.Cluster.Http.Management
             message.Match()
                 .With<GetMembers>(_ =>
                 {
-                    var members = cluster.ReadView.State.Members.Select(MemberToClusterMember);
-                    var unreachable = cluster.ReadView.Reachability.ObserversGroupedByUnreachable.Select(pair =>
+                    dynamic c = new Dynamitey.DynamicObjects.Get(cluster);
+                    dynamic readView = new Dynamitey.DynamicObjects.Get(c.ReadView);
+                    dynamic reachability = new Dynamitey.DynamicObjects.Get(readView.Reachability);
+
+                    var members = ((IEnumerable)readView.State.Members).Cast<dynamic>().Select(m =>
                     {
+                        var member = (Member)m;
+                        return MemberToClusterMember(member);
+                    });
+
+                    var unreachable = ((IEnumerable)reachability.ObserversGroupedByUnreachable).Cast<dynamic>().Select(o =>
+                    {
+                        var pair = (KeyValuePair<UniqueAddress, ImmutableHashSet<UniqueAddress>>)o;
                         return new ClusterUnreachableMember(pair.Key.Address.ToString(), pair.Value.Select(address => address.Address.ToString()).ToArray());
                     });
 
@@ -153,7 +168,10 @@ namespace Akka.Cluster.Http.Management
                 })
                 .With<GetMember>(msg =>
                 {
-                    var member = cluster.ReadView.Members.SingleOrDefault(m => m.Address == msg.Address);
+                    dynamic c = new Dynamitey.DynamicObjects.Get(cluster);
+                    dynamic readView = new Dynamitey.DynamicObjects.Get(c.ReadView);
+
+                    var member = ((IEnumerable)readView.Members).Cast<dynamic>().SingleOrDefault(m => ((Member)m).Address == msg.Address);
                     if (member != null)
                     {
                         Sender.Tell(new Complete.Success(MemberToClusterMember(member)));
@@ -169,7 +187,10 @@ namespace Akka.Cluster.Http.Management
                 })
                 .With<DownMember>(msg =>
                 {
-                    var member = cluster.ReadView.Members.SingleOrDefault(m => m.Address == msg.Address);
+                    dynamic c = new Dynamitey.DynamicObjects.Get(cluster);
+                    dynamic readView = new Dynamitey.DynamicObjects.Get(c.ReadView);
+
+                    var member = ((IEnumerable)readView.Members).Cast<dynamic>().SingleOrDefault(m => ((Member)m).Address == msg.Address);
                     if (member != null)
                     {
                         cluster.Down(msg.Address);
@@ -181,7 +202,10 @@ namespace Akka.Cluster.Http.Management
                 })
                 .With<LeaveMember>(msg =>
                 {
-                    var member = cluster.ReadView.Members.SingleOrDefault(m => m.Address == msg.Address);
+                    dynamic c = new Dynamitey.DynamicObjects.Get(cluster);
+                    dynamic readView = new Dynamitey.DynamicObjects.Get(c.ReadView);
+
+                    var member = ((IEnumerable)readView.Members).Cast<dynamic>().SingleOrDefault(m => ((Member)m).Address == msg.Address);
                     if (member != null)
                     {
                         cluster.Leave(msg.Address);

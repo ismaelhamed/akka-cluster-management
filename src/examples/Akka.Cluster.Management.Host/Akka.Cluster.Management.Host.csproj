@@ -68,42 +68,38 @@
     <Reference Include="DotNetty.Transport, Version=0.4.6.0, Culture=neutral, PublicKeyToken=bc13ca065fa06c29, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DotNetty.Transport.0.4.6\lib\net45\DotNetty.Transport.dll</HintPath>
     </Reference>
+    <Reference Include="Dynamitey, Version=1.0.2.0, Culture=neutral, PublicKeyToken=cbf53ea3aeb972c6, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dynamitey.1.0.2.0\lib\net40\Dynamitey.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Protobuf, Version=3.3.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Google.Protobuf.3.3.0\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
     <Reference Include="Google.ProtocolBuffers, Version=2.4.1.555, Culture=neutral, PublicKeyToken=55f7125234beb589, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Google.ProtocolBuffers.2.4.1.555\lib\net40\Google.ProtocolBuffers.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Google.ProtocolBuffers.Serialization, Version=2.4.1.555, Culture=neutral, PublicKeyToken=55f7125234beb589, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Google.ProtocolBuffers.2.4.1.555\lib\net40\Google.ProtocolBuffers.Serialization.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Hyperion, Version=0.9.8.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Hyperion.0.9.8\lib\net45\Hyperion.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.DependencyInjection.Abstractions.1.1.1\lib\netstandard1.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging, Version=1.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.Logging.1.1.2\lib\netstandard1.1\Microsoft.Extensions.Logging.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Extensions.Logging.Abstractions, Version=1.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.Logging.Abstractions.1.1.2\lib\netstandard1.1\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Owin.Host.HttpListener.4.0.0\lib\net451\Microsoft.Owin.Host.HttpListener.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -123,16 +119,8 @@
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
-    <Reference Include="System.Diagnostics.Tracing, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Diagnostics.Tracing.4.3.0\lib\net462\System.Diagnostics.Tracing.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Globalization.Calendars, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.IO, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.IO.4.3.0\lib\net462\System.IO.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -154,28 +142,13 @@
     </Reference>
     <Reference Include="System.Net.Http, Version=4.1.1.2, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Net.Http.4.3.3\lib\net46\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Numerics" />
-    <Reference Include="System.Reflection, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.4.3.0\lib\net462\System.Runtime.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.Extensions.4.3.0\lib\net462\System.Runtime.Extensions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.InteropServices, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\System.Runtime.InteropServices.4.3.0\lib\net462\System.Runtime.InteropServices.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
       <Private>True</Private>
@@ -207,7 +180,6 @@
     </Reference>
     <Reference Include="Topshelf, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Topshelf.4.0.3\lib\net452\Topshelf.dll</HintPath>
-      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -219,9 +191,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Akka.Cluster.Management\Akka.Cluster.Management.csproj">
