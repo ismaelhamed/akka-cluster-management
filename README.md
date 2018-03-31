@@ -1,8 +1,10 @@
 # Akka Management Cluster HTTP
 
-Akka.NET Management Cluster HTTP, a port of the popular Java/Scala [library](https://github.com/akka/akka-managemen) to .NET, is a management extension that allows you interaction with an `akka-cluster` through an HTTP interface. This management extension exposes different operations to manage nodes in a cluster.
+Akka.NET Management Cluster HTTP, a port of the popular Java/Scala [library](https://github.com/akka/akka-management) to .NET, is a management extension that allows you interaction with an `akka-cluster` through an HTTP interface. This management extension exposes different operations to manage nodes in a cluster.
 
-The operations exposed are comparable to the the JMX interface `akka-cluster` provides.
+The operations exposed comparable to the JMX interface `akka-cluster` provides.
+
+![alt text](doc/screenshot.jpg)
 
 ## API Definition
 
@@ -11,9 +13,11 @@ The following table describes the usage of the API:
 | Path | HTTP method | Required form fields | Description 
 | ------------- | ------------- | ------------- | ------------- 
 | `/cluster/members/`  | GET | None | Returns the status of the Cluster in JSON format.
-| `/cluster/members/`  | POST | address: `{address}` | Executes join operation in cluster for the provided {address}. 
-| `/cluster/members/{address}`  | PUT | operation: `down` | Executes down operation in cluster for provided {address}. 
-| `/cluster/members/{address}`  | PUT | operation: `leave` | Executes leave operation in cluster for provided {address}. 
+| `/cluster/members/` | GET | address: `{address}` | Returns the status of `{address}` in the Cluster
+| `/cluster/members/`  | POST | address: `{address}` | Executes join operation in cluster for the provided `{address}`. 
+| `/cluster/members/`  | PUT | address: `{address}`, operation: `down` | Executes down operation in cluster for provided `{address}`. 
+| `/cluster/members/`  | PUT | address: `{address}`, operation: `leave` | Executes leave operation in cluster for provided `{address}`. 
+| `/cluster/shards/{name}` | GET | None | Returns shard info for the shard region with the provided `{name}`
 
 The expected format of address follows the Cluster URI convention. Example: `akka://Main@myhostname.com:3311`
 
@@ -38,14 +42,11 @@ Example response:
     }
   ],
   "unreachable": [],
-  "leader: "akka.tcp://test@10.10.10.10:1111",
-  "oldest: "akka.tcp://test@10.10.10.10:1111"
+  "leader: "akka.tcp://test@10.10.10.10:1111"
 }
 ```
 
-Where `oldest` is the oldest node in the current datacenter.
-
-#### GET /cluster/members/\{address\} responses
+#### GET /cluster/members/?address=\{address\} responses
 
 | Response code | Description
 | ------------- | -----------
@@ -64,7 +65,7 @@ Example response:
 }
 ```
 
-#### POST /cluster/members/\{address\} responses
+#### POST /cluster/members/ responses
 
 | Response code | Description
 | ------------- | -----------
@@ -77,7 +78,7 @@ Example response:
 Joining akka.tcp://test@10.10.10.10:111
 ```
 
-#### PUT /cluster/members/\{address\} responses
+#### PUT /cluster/members/ responses
 
 | Response code | Operation | Description
 | ------------- | --------- | -----------
@@ -91,4 +92,25 @@ Example response:
 
 ```
 Downing akka.tcp://test@10.10.10.10:111
+```
+
+
+#### GET /cluster/shards/\{name\} responses
+
+| Response code | Description
+| ------------- | -----------
+| 200           | Shard region information in JSON format
+| 404           | No shard region was found on the node for the given `{name}`
+
+Example response:
+
+```
+{
+  "regions": [
+    {
+      "shardId": "1234",
+      "numEntities": 30
+    }
+  ]
+}
 ```

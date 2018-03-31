@@ -26,7 +26,7 @@ namespace Akka.Cluster.Http.Management
         /// This version does not provide security (Basic Authentication or SSL) and uses the default path "members".
         /// </summary>
         public ClusterHttpManagement(ExtendedActorSystem system)
-            : this(system, "/members")
+            : this(system, "/cluster")
         { }
 
         /// <summary>

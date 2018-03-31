@@ -4,7 +4,7 @@ namespace Akka.Cluster.Http.Management
 {
     public class ClusterHttpManagementSettings
     {
-        public const string ConfigPath = "akka.cluster.http.management";
+        public static readonly string ConfigPath = "akka.cluster.http.management";
 
         public int ClusterHttpManagementPort { get; }
         public string ClusterHttpManagementHostname { get; }

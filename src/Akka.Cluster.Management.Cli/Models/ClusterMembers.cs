@@ -19,6 +19,7 @@
         public string SelfNode { get; set; }
         public ClusterMember[] Members { get; set; }
         public ClusterUnreachableMember[] Unreachable { get; set; }
+        public string Leader { get; set; }
     }
 
     public class ClusterHttpManagementMessage

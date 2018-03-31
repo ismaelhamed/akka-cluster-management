@@ -29,8 +29,8 @@ namespace Akka.Cluster.Management.Cli
                 ShortVersionGetter = () => "0.6.0",
                 ExtendedHelpText = @"
 Examples: 
-  akka-cluster members
-  akka-cluster down <node-url>    
+  akka-cluster cluster-status
+  akka-cluster down <node-url>
 
 Where the <node-url> should be on the format of
   'akka.<protocol>://<actor-system-name>@<hostname>:<port>'
@@ -91,6 +91,42 @@ Where the <node-url> should be on the format of
                     var nodeUrl = nodeUrlArgument.Value;
 
                     return DownMember(nodeHostname, nodePort, nodeUrl);
+                });
+            });
+
+            app.Command("cluster-status", command =>
+            {
+                command.Description = "Asks the cluster for its current status (member ring, unavailable nodes, meta data, etc.)";
+
+                var nodeHostnameArgument = command.Option("--hostname <node-hostname>", "", CommandOptionType.SingleValue);
+                var nodePortArgument = command.Option("--port <node-port>", "", CommandOptionType.SingleValue);
+
+                command.HelpOption("-?|-h|--help");
+                command.OnExecute(() =>
+                {
+                    var nodeHostname = nodeHostnameArgument.Value() ?? DefaultHostname;
+                    var nodePort = int.Parse(nodePortArgument.Value() ?? DefaultPort);
+
+                    return GetClusterStatus(nodeHostname, nodePort);
+                });
+            });
+
+            app.Command("member-status", command =>
+            {
+                command.Description = "Asks the member node for its current status";
+
+                var nodeHostnameArgument = command.Option("--hostname <node-hostname>", "", CommandOptionType.SingleValue);
+                var nodePortArgument = command.Option("--port <node-port>", "", CommandOptionType.SingleValue);
+                var nodeUrlArgument = command.Argument("[node-url]", "");
+
+                command.HelpOption("-?|-h|--help");
+                command.OnExecute(() =>
+                {
+                    var nodeHostname = nodeHostnameArgument.Value() ?? DefaultHostname;
+                    var nodePort = int.Parse(nodePortArgument.Value() ?? DefaultPort);
+                    var nodeUrl = nodeUrlArgument.Value;
+
+                    return GetMemberStatus(nodeHostname, nodePort, nodeUrl);
                 });
             });
 
@@ -156,8 +192,6 @@ Where the <node-url> should be on the format of
         private static int JoinMember(string hostname, int port, string nodeUrl) =>
             Execute(async () =>
             {
-                Console.WriteLine($"{hostname} is JOINING cluster node {nodeUrl}");
-
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri($"http://{hostname}:{port}");
@@ -181,8 +215,6 @@ Where the <node-url> should be on the format of
         private static int DownMember(string hostname, int port, string nodeUrl) =>
             Execute(async () =>
             {
-                Console.WriteLine($"Marking {nodeUrl} as DOWN");
-
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri($"http://{hostname}:{port}");
@@ -206,8 +238,6 @@ Where the <node-url> should be on the format of
         private static int LeaveMember(string hostname, int port, string nodeUrl) =>
             Execute(async () =>
             {
-                Console.WriteLine($"Scheduling {nodeUrl} to LEAVE cluster");
-
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri($"http://{hostname}:{port}");
@@ -226,11 +256,9 @@ Where the <node-url> should be on the format of
                 }
             });
 
-        private static int GetMembers(string hostname, int port) =>
+        private static int GetClusterStatus(string hostname, int port) =>
             Execute(async () =>
             {
-                Console.WriteLine("Querying members");
-
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri($"http://{hostname}:{port}");
@@ -242,15 +270,61 @@ Where the <node-url> should be on the format of
                     {
                         var result = await response.Content.ReadAsAsync<ClusterMembers>();
 
-                        var members = result.Unreachable.Select(member => new Tuple<string, string, string>(member.Node, "Unreachable", "")).ToList();
-                        foreach (var re in result.Members.Select(member => new Tuple<string, string, string>(member.Node, member.Status, string.Join(",", member.Roles))))
+                        var members = result.Unreachable.Select(member => new Tuple<string, string, string, string>(member.Node, "Unreachable", null, null)).ToList();
+                        foreach (var re in result.Members.Select(member => new Tuple<string, string, string, string>(member.Node, member.Status, string.Join(", ", member.Roles), null)))
                         {
                             if (members.FirstOrDefault(m => m.Item1 == re.Item1) == null)
-                                members.Add(new Tuple<string, string, string>(re.Item1, re.Item2, re.Item3));
+                            {
+                                members.Add(re.Item1 == result.Leader 
+                                    ? new Tuple<string, string, string, string>(re.Item1, re.Item2, re.Item3, "(leader)") 
+                                    : new Tuple<string, string, string, string>(re.Item1, re.Item2, re.Item3, null));
+                            }
                         }
 
+                        var table = new ConsoleTable(new[] { "NODE", "STATUS", "ROLES", "" }, new ConsoleTableSettings());
+                        members.OrderBy(m => m.Item1).ToList().ForEach(member => table.AddRow(new[] { member.Item1, member.Item2, member.Item3, member.Item4 }));
+                        table.WriteToConsole();
+                    }
+                }
+            });
+
+        private static int GetMemberStatus(string hostname, int port, string nodeUrl) =>
+            Execute(async () =>
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri($"http://{hostname}:{port}");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    var response = await client.GetAsync($"/members/?address={nodeUrl}");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var result = await response.Content.ReadAsAsync<ClusterMember>();
+
                         var table = new ConsoleTable(new[] { "NODE", "STATUS", "ROLES" }, new ConsoleTableSettings());
-                        members.OrderBy(m => m.Item1).ToList().ForEach(member => table.AddRow(new[] { member.Item1, member.Item2, member.Item3 }));
+                        table.AddRow(new[] { result.Node, result.Status, string.Join(", ", result.Roles) });
+                        table.WriteToConsole();
+                    }
+                }
+            });
+
+        private static int GetMembers(string hostname, int port) =>
+            Execute(async () =>
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri($"http://{hostname}:{port}");
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    var response = await client.GetAsync("/members");
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var result = await response.Content.ReadAsAsync<ClusterMembers>();
+
+                        var table = new ConsoleTable(new[] { "NODE" }, new ConsoleTableSettings());
+                        Array.ForEach(result.Members, member => table.AddRow(new[] { member.Node }));
                         table.WriteToConsole();
                     }
                 }
@@ -259,8 +333,6 @@ Where the <node-url> should be on the format of
         private static int GetUnreachable(string hostname, int port) =>
             Execute(async () =>
             {
-                Console.WriteLine("Querying unreachable members");
-
                 using (var client = new HttpClient())
                 {
                     client.BaseAddress = new Uri($"http://{hostname}:{port}");

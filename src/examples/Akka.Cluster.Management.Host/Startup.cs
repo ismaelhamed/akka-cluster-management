@@ -8,16 +8,20 @@ namespace Akka.Cluster.Management.Host
 {
     public class Startup
     {
-        private ActorSystem system;
+        private ActorSystem actorSystem;
 
         public void Start()
         {
-            var str = "cluster-management-system";
+            var actorSystemName = "akka-cluster-management";
+
             var config = ((AkkaConfigurationSection)ConfigurationManager.GetSection("akka")).AkkaConfig.GetConfig("cluster-management");
             if (config != null)
-                str = config.GetString("actorsystem", str);
-            system = ActorSystem.Create(str);
-            ClusterHttpManagement.Get(system).Start();
+            {
+                actorSystemName = config.GetString("actorsystem", actorSystemName);
+            }
+
+            actorSystem = ActorSystem.Create(actorSystemName);
+            ClusterHttpManagement.Get(actorSystem).Start();
 
             Console.WriteLine("Press Enter to exit...");
             Console.ReadLine();
@@ -25,8 +29,8 @@ namespace Akka.Cluster.Management.Host
 
         public void Stop()
         {
-            ClusterHttpManagement.Get(system).Stop();
-            system.Terminate();
+            ClusterHttpManagement.Get(actorSystem).Stop();
+            actorSystem.Terminate();
         }
     }
 }

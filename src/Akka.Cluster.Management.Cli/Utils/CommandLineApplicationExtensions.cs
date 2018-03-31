@@ -9,31 +9,35 @@ namespace Akka.Cluster.Management.Cli.Utils
     {
         public static void DisplayAsciiArt(this CommandLineApplication target)
         {
-            const string Ascii = @"
-
-                   `.:::`                        ```         ``                       
-                 `:+ooooo.                       syo        /yy`                      
-              `-/ooooooooo.            ``        ydy        +dd`          ```         
-            `:+oooooooooooo.        -+syyso:ss:  ydy  `/so: +dd`  -ss/`./ssyso:oso    
-         `./oooooooooooooooo.     `ohho:-:+ydd+  ydy`:yho-  +dd`-shy: /hhs/-:/yhdy    
-       `:+ooooooooooooooooooo-    /dd:     .hd+  ydhshh:    +ddohd+` .hdo     `ydy    
-     ./ooooooooooossyhhhhddddh-   /dd:     .hd+  ydhsyhs.   +ddyshy: .hdo     `ydy    
-  `-+ooooooooosyhhhdddddddddddh:  `ohho:-:+hdds- ydy``/hh+` +dd. :yho./hhs/-:/yhdh-`  
-`/ooooooooosyhhhdddddddddddddddh.   -+syyso:/sys oso   .os+`/ss`  `+so-./syyys/-syy.  
-/oooooooosyhhhddddddddhhdddddddh:      ```    ``                          ```    ``   
--oooooo/:-.```       ``.-ddhdddh`                                                     
- `-::-`                   `-::-` 
+            const string ascii = @"
+ 
+                    `.:::`                        ```         ``                       
+                  `:+ooooo.                       syo        /yy`                      
+               `-/ooooooooo.            ``        ydy        +dd`          ```         
+             `:+oooooooooooo.        -+syyso:ss:  ydy  `/so: +dd`  -ss/ -+syyso:ss:    
+          `./oooooooooooooooo.     `ohho:-:+ydd+  ydy`:yho-  +dd`-shy: /hhs/-:/yhdy    
+        `:+ooooooooooooooooooo-    /dd:     .hd+  ydhshh:    +ddohd+  .hdo     `ydy    
+      ./oooooooooooss{0}   /dd:     .hd+  ydhsyhs.   +ddyshy: .hdo     `ydy    
+   `-+ooooooooos{1}  `ohho:-:+hdds- ydy``/hh+` +dd. :yho ohho:-:+hdds-  
+ `/ooooooooos{2}   -+syyso:/sys oso   .os+ /ss`  `+so `/syyys/-sys  
+ /oooooooos{3}      ```    ``                          ```    ``   
+ -oooooo/{4}       {5}                                                     
+  `-::-`                   {6} 
 
 ";
             var lightColor = Color.FromArgb(47, 171, 223);
             var darkColor = Color.FromArgb(25, 118, 186);
-
-            var styleSheet = new StyleSheet(lightColor);
-            styleSheet.AddStyle(@"yhhh[a-z]*[-:.]", darkColor);
-            styleSheet.AddStyle(@":-.```", darkColor);
-            styleSheet.AddStyle(@"``.-ddhdddh`", darkColor);
-            styleSheet.AddStyle(@"`-::-`", darkColor);
-            Console.WriteLineStyled(Ascii, styleSheet);
+            var fruits = new[]
+            {
+                new Formatter("yhhhhddddh-", darkColor),
+                new Formatter("yhhhdddddddddddh:", darkColor),
+                new Formatter("yhhhdddddddddddddddh.", darkColor),
+                new Formatter("yhhhddddddddhhdddddddh:", darkColor),
+                new Formatter(":-.```", darkColor),
+                new Formatter("``.-ddhdddh`", darkColor),
+                new Formatter("`-::-`", darkColor)
+            };
+            Console.WriteLineFormatted(ascii, lightColor, fruits);
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Dynamic;
 using System.Linq;
-using System.Reflection;
 using Akka.Actor;
+using Akka.Cluster.Sharding;
 
 namespace Akka.Cluster.Http.Management
 {
@@ -51,60 +51,13 @@ namespace Akka.Cluster.Http.Management
         }
     }
 
-    public class ClusterMember
+    public class GetShardInfo
     {
-        public readonly string Node;
-        public readonly string NodeUid;
-        public readonly string Status;
-        public readonly string[] Roles;
+        public readonly string Name;
 
-        public static ClusterMember Empty => new ClusterMember();
-
-        public ClusterMember()
-        { }
-
-        public ClusterMember(string node, string nodeUid, string status, string[] roles)
+        public GetShardInfo(string name)
         {
-            Node = node;
-            NodeUid = nodeUid;
-            Status = status;
-            Roles = roles;
-        }
-    }
-
-    public class ClusterUnreachableMember
-    {
-        public readonly string Node;
-        public readonly string[] ObservedBy;
-
-        public ClusterUnreachableMember(string node, string[] observedBy)
-        {
-            Node = node;
-            ObservedBy = observedBy;
-        }
-    }
-
-    public class ClusterMembers
-    {
-        public readonly string SelfNode;
-        public readonly ClusterMember[] Members;
-        public readonly ClusterUnreachableMember[] Unreachable;
-
-        public ClusterMembers(string selfNode, ClusterMember[] members = null, ClusterUnreachableMember[] unreachable = null)
-        {
-            SelfNode = selfNode;
-            Members = members;
-            Unreachable = unreachable;
-        }
-    }
-
-    public class ClusterHttpManagementMessage
-    {
-        public readonly string Message;
-
-        public ClusterHttpManagementMessage(string message)
-        {
-            Message = message;
+            Name = name;
         }
     }
 
@@ -151,6 +104,7 @@ namespace Akka.Cluster.Http.Management
                     dynamic c = new Dynamitey.DynamicObjects.Get(cluster);
                     dynamic readView = new Dynamitey.DynamicObjects.Get(c.ReadView);
                     dynamic reachability = new Dynamitey.DynamicObjects.Get(readView.Reachability);
+                    dynamic state = new Dynamitey.DynamicObjects.Get(readView.State);
 
                     var members = ((IEnumerable)readView.State.Members).Cast<dynamic>().Select(m =>
                     {
@@ -164,7 +118,9 @@ namespace Akka.Cluster.Http.Management
                         return new ClusterUnreachableMember(pair.Key.Address.ToString(), pair.Value.Select(address => address.Address.ToString()).ToArray());
                     });
 
-                    Sender.Tell(new Complete.Success(new ClusterMembers(cluster.SelfAddress.ToString(), members.ToArray(), unreachable.ToArray())));
+                    var leader = ((Address) state.Leader).ToString();
+
+                    Sender.Tell(new Complete.Success(new ClusterMembers(cluster.SelfAddress.ToString(), members.ToArray(), unreachable.ToArray(), leader)));
                 })
                 .With<GetMember>(msg =>
                 {
@@ -214,6 +170,24 @@ namespace Akka.Cluster.Http.Management
                     }
 
                     Sender.Tell(new Complete.Failure($"Member {msg.Address.ToString()} not found"));
+                })
+                .With<GetShardInfo>(shardInfo =>
+                {
+                    try
+                    {
+                        ClusterSharding.Get(cluster.System)
+                            .ShardRegion(shardInfo.Name)
+                            .Ask<ShardRegionStats>(GetShardRegionStats.Instance, TimeSpan.FromSeconds(5))
+                            .PipeTo(Sender);
+                    }
+                    catch (AskTimeoutException)
+                    {
+                        Sender.Tell(new Complete.Failure($"Shard Region {shardInfo.Name} not responding, may have been terminated"));
+                    }
+                    catch (Exception)
+                    {
+                        Sender.Tell(new Complete.Failure($"Shard Region {shardInfo.Name} is not started"));
+                    }
                 });
         }
 
