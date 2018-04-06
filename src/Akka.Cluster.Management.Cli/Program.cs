@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Akka.Cluster.Management.Cli.Models;
 using Akka.Cluster.Management.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
+using Newtonsoft.Json;
 using Console = Colorful.Console;
 
 namespace Akka.Cluster.Management.Cli
@@ -201,10 +202,11 @@ Where the <node-url> should be on the format of
                     var parameters = new Dictionary<string, string> { { "address", nodeUrl } };
                     var encodedContent = new FormUrlEncodedContent(parameters);
 
-                    var response = await client.PostAsync("/members", encodedContent);
+                    var response = await client.PostAsync("/cluster/members", encodedContent);
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<ClusterHttpManagementMessage>();
+                        var data = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<ClusterHttpManagementMessage>(data);
                         Console.WriteLine(result.Message);
                     }
 
@@ -224,10 +226,11 @@ Where the <node-url> should be on the format of
                     var parameters = new Dictionary<string, string> { { "address", nodeUrl }, { "operation", "down" } };
                     var encodedContent = new FormUrlEncodedContent(parameters);
 
-                    var response = await client.PutAsync("/members", encodedContent);
+                    var response = await client.PutAsync("/cluster/members", encodedContent);
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<ClusterHttpManagementMessage>();
+                        var data = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<ClusterHttpManagementMessage>(data);
                         Console.WriteLine(result.Message);
                     }
 
@@ -247,10 +250,11 @@ Where the <node-url> should be on the format of
                     var parameters = new Dictionary<string, string> { { "address", nodeUrl }, { "operation", "leave" } };
                     var encodedContent = new FormUrlEncodedContent(parameters);
 
-                    var response = await client.PutAsync("/members", encodedContent);
+                    var response = await client.PutAsync("/cluster/members", encodedContent);
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<ClusterHttpManagementMessage>();
+                        var data = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<ClusterHttpManagementMessage>(data);
                         Console.WriteLine(result.Message);
                     }
                 }
@@ -265,10 +269,11 @@ Where the <node-url> should be on the format of
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    var response = await client.GetAsync("/members");
+                    var response = await client.GetAsync("/cluster/members");
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<ClusterMembers>();
+                        var data = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
 
                         var members = result.Unreachable.Select(member => new Tuple<string, string, string, string>(member.Node, "Unreachable", null, null)).ToList();
                         foreach (var re in result.Members.Select(member => new Tuple<string, string, string, string>(member.Node, member.Status, string.Join(", ", member.Roles), null)))
@@ -277,7 +282,7 @@ Where the <node-url> should be on the format of
                             {
                                 members.Add(re.Item1 == result.Leader 
                                     ? new Tuple<string, string, string, string>(re.Item1, re.Item2, re.Item3, "(leader)") 
-                                    : new Tuple<string, string, string, string>(re.Item1, re.Item2, re.Item3, null));
+                                    : new Tuple<string, string, string, string>(re.Item1, re.Item2, re.Item3, ""));
                             }
                         }
 
@@ -297,10 +302,11 @@ Where the <node-url> should be on the format of
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    var response = await client.GetAsync($"/members/?address={nodeUrl}");
+                    var response = await client.GetAsync($"/cluster/members/?address={nodeUrl}");
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<ClusterMember>();
+                        var data = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<ClusterMember>(data);
 
                         var table = new ConsoleTable(new[] { "NODE", "STATUS", "ROLES" }, new ConsoleTableSettings());
                         table.AddRow(new[] { result.Node, result.Status, string.Join(", ", result.Roles) });
@@ -318,10 +324,11 @@ Where the <node-url> should be on the format of
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    var response = await client.GetAsync("/members");
+                    var response = await client.GetAsync("/cluster/members");
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<ClusterMembers>();
+                        var data = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
 
                         var table = new ConsoleTable(new[] { "NODE" }, new ConsoleTableSettings());
                         Array.ForEach(result.Members, member => table.AddRow(new[] { member.Node }));
@@ -339,10 +346,11 @@ Where the <node-url> should be on the format of
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    var response = await client.GetAsync("/members");
+                    var response = await client.GetAsync("/cluster/members");
                     if (response.IsSuccessStatusCode)
                     {
-                        var result = await response.Content.ReadAsAsync<ClusterMembers>();
+                        var data = await response.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
                         if (result.Unreachable.Any())
                         {
                             var table = new ConsoleTable(new[] { "NODE" }, new ConsoleTableSettings());
