@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Configuration;
+using System.IO;
 using Akka.Actor;
 using Akka.Cluster.Http.Management;
-using Akka.Configuration.Hocon;
+using Akka.Configuration;
 
 namespace Akka.Cluster.Management.Host
 {
@@ -12,15 +12,16 @@ namespace Akka.Cluster.Management.Host
 
         public void Start()
         {
-            var actorSystemName = "akka-cluster-management";
+            var actorSystemName = "akka-cluster";
+            var hoconConfig = ConfigurationFactory.ParseString(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "application.conf"));
 
-            var config = ((AkkaConfigurationSection)ConfigurationManager.GetSection("akka")).AkkaConfig.GetConfig("cluster-management");
+            var config = hoconConfig.GetConfig("cluster-management");
             if (config != null)
             {
                 actorSystemName = config.GetString("actorsystem", actorSystemName);
             }
 
-            actorSystem = ActorSystem.Create(actorSystemName);
+            actorSystem = ActorSystem.Create(actorSystemName, hoconConfig);
             ClusterHttpManagement.Get(actorSystem).Start();
 
             Console.WriteLine("Press Enter to exit...");
