@@ -9,6 +9,7 @@ using Akka.Cluster.Management.Cli.Models;
 using Akka.Cluster.Management.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
+using Serilog;
 using Console = Colorful.Console;
 
 namespace Akka.Cluster.Management.Cli
@@ -22,6 +23,12 @@ namespace Akka.Cluster.Management.Cli
         {
             var cancellationTokenSource = new CancellationTokenSource();
             Console.CancelKeyPress += (_, __) => cancellationTokenSource.Cancel();
+
+            // Set up logger
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .CreateLogger();
 
             var app = new CommandLineApplication(throwOnUnexpectedArg: false)
             {
@@ -193,175 +200,222 @@ Where the <node-url> should be on the format of
         private static int JoinMember(string hostname, int port, string nodeUrl) =>
             Execute(async () =>
             {
-                using (var client = new HttpClient())
+                try
                 {
-                    client.BaseAddress = new Uri($"http://{hostname}:{port}");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    var parameters = new Dictionary<string, string> { { "address", nodeUrl } };
-                    var encodedContent = new FormUrlEncodedContent(parameters);
-
-                    var response = await client.PostAsync("/cluster/members", encodedContent);
-                    if (response.IsSuccessStatusCode)
+                    using (var client = new HttpClient())
                     {
-                        var data = await response.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<ClusterHttpManagementMessage>(data);
-                        Console.WriteLine(result.Message);
-                    }
+                        client.BaseAddress = new Uri($"http://{hostname}:{port}");
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    Console.WriteLine("Something went wrong.");
+                        var parameters = new Dictionary<string, string> { { "address", nodeUrl } };
+                        var encodedContent = new FormUrlEncodedContent(parameters);
+
+                        var response = await client.PostAsync("/cluster/members", encodedContent);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var data = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<ClusterHttpManagementMessage>(data);
+                            Console.WriteLine(result.Message);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex, "Something went wrong");
+                    Console.WriteLine("Something went wrong");
                 }
             });
 
         private static int DownMember(string hostname, int port, string nodeUrl) =>
             Execute(async () =>
             {
-                using (var client = new HttpClient())
+                try
                 {
-                    client.BaseAddress = new Uri($"http://{hostname}:{port}");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    var parameters = new Dictionary<string, string> { { "address", nodeUrl }, { "operation", "down" } };
-                    var encodedContent = new FormUrlEncodedContent(parameters);
-
-                    var response = await client.PutAsync("/cluster/members", encodedContent);
-                    if (response.IsSuccessStatusCode)
+                    using (var client = new HttpClient())
                     {
-                        var data = await response.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<ClusterHttpManagementMessage>(data);
-                        Console.WriteLine(result.Message);
-                    }
+                        client.BaseAddress = new Uri($"http://{hostname}:{port}");
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                    Console.WriteLine("Something went wrong.");
+                        var parameters = new Dictionary<string, string> { { "address", nodeUrl }, { "operation", "down" } };
+                        var encodedContent = new FormUrlEncodedContent(parameters);
+
+                        var response = await client.PutAsync("/cluster/members", encodedContent);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var data = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<ClusterHttpManagementMessage>(data);
+                            Console.WriteLine(result.Message);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex, "Something went wrong");
+                    Console.WriteLine("Something went wrong");
                 }
             });
 
         private static int LeaveMember(string hostname, int port, string nodeUrl) =>
             Execute(async () =>
             {
-                using (var client = new HttpClient())
+                try
                 {
-                    client.BaseAddress = new Uri($"http://{hostname}:{port}");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    var parameters = new Dictionary<string, string> { { "address", nodeUrl }, { "operation", "leave" } };
-                    var encodedContent = new FormUrlEncodedContent(parameters);
-
-                    var response = await client.PutAsync("/cluster/members", encodedContent);
-                    if (response.IsSuccessStatusCode)
+                    using (var client = new HttpClient())
                     {
-                        var data = await response.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<ClusterHttpManagementMessage>(data);
-                        Console.WriteLine(result.Message);
+                        client.BaseAddress = new Uri($"http://{hostname}:{port}");
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                        var parameters = new Dictionary<string, string> { { "address", nodeUrl }, { "operation", "leave" } };
+                        var encodedContent = new FormUrlEncodedContent(parameters);
+
+                        var response = await client.PutAsync("/cluster/members", encodedContent);
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var data = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<ClusterHttpManagementMessage>(data);
+                            Console.WriteLine(result.Message);
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex, "Something went wrong");
+                    Console.WriteLine("Something went wrong");
                 }
             });
 
         private static int GetClusterStatus(string hostname, int port) =>
             Execute(async () =>
             {
-                using (var client = new HttpClient())
+                try
                 {
-                    client.BaseAddress = new Uri($"http://{hostname}:{port}");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    var response = await client.GetAsync("/cluster/members");
-                    if (response.IsSuccessStatusCode)
+                    using (var client = new HttpClient())
                     {
-                        var data = await response.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
+                        client.BaseAddress = new Uri($"http://{hostname}:{port}");
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                        var members = result.Unreachable.Select(member => new Tuple<string, string, string, string>(member.Node, "Unreachable", null, null)).ToList();
-                        foreach (var re in result.Members.Select(member => new Tuple<string, string, string, string>(member.Node, member.Status, string.Join(", ", member.Roles), null)))
+                        var response = await client.GetAsync("/cluster/members");
+                        if (response.IsSuccessStatusCode)
                         {
-                            if (members.FirstOrDefault(m => m.Item1 == re.Item1) == null)
-                            {
-                                members.Add(re.Item1 == result.Leader 
-                                    ? new Tuple<string, string, string, string>(re.Item1, re.Item2, re.Item3, "(leader)") 
-                                    : new Tuple<string, string, string, string>(re.Item1, re.Item2, re.Item3, ""));
-                            }
-                        }
+                            var data = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
 
-                        var table = new ConsoleTable(new[] { "NODE", "STATUS", "ROLES", "" }, new ConsoleTableSettings());
-                        members.OrderBy(m => m.Item1).ToList().ForEach(member => table.AddRow(new[] { member.Item1, member.Item2, member.Item3, member.Item4 }));
-                        table.WriteToConsole();
+                            var members = result.Unreachable.Select(member => new Tuple<string, string, string, string>(member.Node, "Unreachable", string.Empty, string.Empty)).ToList();
+                            members.AddRange(from re in result.Members.Select(member => new Tuple<string, string, string, string>(member.Node, member.Status, string.Join(", ", member.Roles), string.Empty)).OrderBy(m => m.Item1)
+                                select re.Item1 == result.Leader
+                                    ? new Tuple<string, string, string, string>(re.Item1, re.Item2, re.Item3, "(leader)")
+                                    : new Tuple<string, string, string, string>(re.Item1, re.Item2, re.Item3, ""));
+
+                            var table = new ConsoleTable(new[] { "NODE", "STATUS", "ROLES", "" }, new ConsoleTableSettings());
+                            members.ToList().ForEach(member => table.AddRow(new[] { member.Item1, member.Item2, member.Item3, member.Item4 }));
+                            table.WriteToConsole();
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex, "Something went wrong");
+                    Console.WriteLine("Something went wrong");
                 }
             });
 
         private static int GetMemberStatus(string hostname, int port, string nodeUrl) =>
             Execute(async () =>
             {
-                using (var client = new HttpClient())
+                try
                 {
-                    client.BaseAddress = new Uri($"http://{hostname}:{port}");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    var response = await client.GetAsync($"/cluster/members/?address={nodeUrl}");
-                    if (response.IsSuccessStatusCode)
+                    using (var client = new HttpClient())
                     {
-                        var data = await response.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<ClusterMember>(data);
+                        client.BaseAddress = new Uri($"http://{hostname}:{port}");
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                        var table = new ConsoleTable(new[] { "NODE", "STATUS", "ROLES" }, new ConsoleTableSettings());
-                        table.AddRow(new[] { result.Node, result.Status, string.Join(", ", result.Roles) });
-                        table.WriteToConsole();
+                        var response = await client.GetAsync($"/cluster/members/?address={nodeUrl}");
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var data = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<ClusterMember>(data);
+
+                            var table = new ConsoleTable(new[] { "NODE", "STATUS", "ROLES" }, new ConsoleTableSettings());
+                            table.AddRow(new[] { result.Node, result.Status, string.Join(", ", result.Roles) });
+                            table.WriteToConsole();
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex, "Something went wrong");
+                    Console.WriteLine("Something went wrong");
                 }
             });
 
         private static int GetMembers(string hostname, int port) =>
             Execute(async () =>
             {
-                using (var client = new HttpClient())
+                try
                 {
-                    client.BaseAddress = new Uri($"http://{hostname}:{port}");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    var response = await client.GetAsync("/cluster/members");
-                    if (response.IsSuccessStatusCode)
+                    using (var client = new HttpClient())
                     {
-                        var data = await response.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
+                        client.BaseAddress = new Uri($"http://{hostname}:{port}");
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                        var table = new ConsoleTable(new[] { "NODE" }, new ConsoleTableSettings());
-                        Array.ForEach(result.Members, member => table.AddRow(new[] { member.Node }));
-                        table.WriteToConsole();
+                        var response = await client.GetAsync("/cluster/members");
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var data = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
+
+                            var table = new ConsoleTable(new[] { "NODE" }, new ConsoleTableSettings());
+                            Array.ForEach(result.Members, member => table.AddRow(new[] { member.Node }));
+                            table.WriteToConsole();
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex, "Something went wrong");
+                    Console.WriteLine("Something went wrong");
                 }
             });
 
         private static int GetUnreachable(string hostname, int port) =>
             Execute(async () =>
             {
-                using (var client = new HttpClient())
+                try
                 {
-                    client.BaseAddress = new Uri($"http://{hostname}:{port}");
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                    var response = await client.GetAsync("/cluster/members");
-                    if (response.IsSuccessStatusCode)
+                    using (var client = new HttpClient())
                     {
-                        var data = await response.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
-                        if (result.Unreachable.Any())
+                        client.BaseAddress = new Uri($"http://{hostname}:{port}");
+                        client.DefaultRequestHeaders.Accept.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                        var response = await client.GetAsync("/cluster/members");
+                        if (response.IsSuccessStatusCode)
                         {
-                            var table = new ConsoleTable(new[] { "NODE" }, new ConsoleTableSettings());
-                            Array.ForEach(result.Unreachable, member => table.AddRow(new[] { member.Node }));
-                            table.WriteToConsole();
-                        }
-                        else
-                        {
-                            Console.WriteLine("All nodes seem to be Up :)");
+                            var data = await response.Content.ReadAsStringAsync();
+                            var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
+                            if (result.Unreachable.Any())
+                            {
+                                var table = new ConsoleTable(new[] { "NODE" }, new ConsoleTableSettings());
+                                Array.ForEach(result.Unreachable, member => table.AddRow(new[] { member.Node }));
+                                table.WriteToConsole();
+                            }
+                            else
+                            {
+                                Console.WriteLine("All nodes seem to be Up :)");
+                            }
                         }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug(ex, "Something went wrong");
+                    Console.WriteLine("Something went wrong");
                 }
             });
     }
