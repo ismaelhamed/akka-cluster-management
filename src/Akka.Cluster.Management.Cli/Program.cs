@@ -14,7 +14,7 @@ using Console = Colorful.Console;
 
 namespace Akka.Cluster.Management.Cli
 {
-    internal class Program
+    internal static class Program
     {
         private const string DefaultHostname = "127.0.0.1";
         private const string DefaultPort = "19999";
@@ -34,15 +34,15 @@ namespace Akka.Cluster.Management.Cli
             {
                 Name = "akka-cluster",
                 FullName = "Akka Management Cluster HTTP",
-                ShortVersionGetter = () => "0.6.0",
+                ShortVersionGetter = () => "0.6.1",
                 ExtendedHelpText = @"
-Examples: 
-  akka-cluster cluster-status
-  akka-cluster down <node-url>
+            Examples: 
+              akka-cluster cluster-status
+              akka-cluster down <node-url>
 
-Where the <node-url> should be on the format of
-  'akka.<protocol>://<actor-system-name>@<hostname>:<port>'
-"
+            Where the <node-url> should be on the format of
+              'akka.<protocol>://<actor-system-name>@<hostname>:<port>'
+            "
             };
 
             app.Command("join", command =>
@@ -304,14 +304,13 @@ Where the <node-url> should be on the format of
                             var data = await response.Content.ReadAsStringAsync();
                             var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
 
-                            var members = result.Unreachable.Select(member => new Tuple<string, string, string, string>(member.Node, "Unreachable", string.Empty, string.Empty)).ToList();
-                            members.AddRange(from re in result.Members.Select(member => new Tuple<string, string, string, string>(member.Node, member.Status, string.Join(", ", member.Roles), string.Empty)).OrderBy(m => m.Item1)
-                                select re.Item1 == result.Leader
-                                    ? new Tuple<string, string, string, string>(re.Item1, re.Item2, re.Item3, "(leader)")
-                                    : new Tuple<string, string, string, string>(re.Item1, re.Item2, re.Item3, ""));
+                            var unreachable = result.Unreachable.Select(u => u.Node).ToArray();
+                            var members = result.Members.Select(re => unreachable.Contains(re.Node)
+                                ? new { re.Node, Status = "Unreachable", Roles = string.Join(", ", re.Roles), Leader = re.Node == result.Leader ? "(leader)" : string.Empty }
+                                : new { re.Node, re.Status, Roles = string.Join(", ", re.Roles), Leader = re.Node == result.Leader ? "(leader)" : string.Empty });
 
                             var table = new ConsoleTable(new[] { "NODE", "STATUS", "ROLES", "" }, new ConsoleTableSettings());
-                            members.ToList().ForEach(member => table.AddRow(new[] { member.Item1, member.Item2, member.Item3, member.Item4 }));
+                            members.ToList().ForEach(member => table.AddRow(new[] { member.Node, member.Status, member.Roles, member.Leader }));
                             table.WriteToConsole();
                         }
                     }
