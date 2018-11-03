@@ -178,15 +178,15 @@ namespace Akka.Cluster.Http.Management
                         ClusterSharding.Get(cluster.System)
                             .ShardRegion(shardInfo.Name)
                             .Ask<ShardRegionStats>(GetShardRegionStats.Instance, TimeSpan.FromSeconds(5))
-                            .PipeTo(Sender);
+                            .PipeTo(Sender, success: stats => new Complete.Success(new ShardDetails(stats.Stats.Select(stat => new ShardRegionInfo(stat.Key, stat.Value)).ToArray())));
                     }
                     catch (AskTimeoutException)
                     {
-                        Sender.Tell(new Complete.Failure($"Shard Region {shardInfo.Name} not responding, may have been terminated"));
+                        Sender.Tell(new Complete.Failure($"Shard Region [{shardInfo.Name}] not responding, may have been terminated"));
                     }
                     catch (Exception)
                     {
-                        Sender.Tell(new Complete.Failure($"Shard Region {shardInfo.Name} is not started"));
+                        Sender.Tell(new Complete.Failure($"Shard type [{shardInfo.Name}] must be started first"));
                     }
                 });
         }

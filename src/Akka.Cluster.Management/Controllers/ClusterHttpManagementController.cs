@@ -138,7 +138,7 @@ namespace Akka.Cluster.Http.Management.Controllers
             {
                 var response = await SystemActors.RoutesHandler.Ask<Complete>(new GetShardInfo(name), TimeSpan.FromSeconds(5));
                 return response.Match<IHttpActionResult>()
-                    .With<Complete.Success>(success => Ok(new ClusterHttpManagementMessage(success.Result.ToString())))
+                    .With<Complete.Success>(success => Ok(success.Result))
                     .With<Complete.Failure>(failure => Content(HttpStatusCode.NotFound, new ClusterHttpManagementMessage(failure.Reason)))
                     .ResultOrDefault(_ => throw new InvalidOperationException("Something went wrong. Cluster might be shutdown."));
             }
