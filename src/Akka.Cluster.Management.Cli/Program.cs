@@ -35,14 +35,14 @@ namespace Akka.Cluster.Management.Cli
             {
                 Name = "akka-cluster",
                 FullName = "Akka Management Cluster HTTP",
-                ShortVersionGetter = () => "0.6.3",
+                ShortVersionGetter = () => "0.7.0",
                 ExtendedHelpText = @"
-            Examples: 
-              akka-cluster cluster-status
-              akka-cluster down <node-url>
+Examples: 
+  akka-cluster cluster-status
+  akka-cluster down <node-url>
 
-            Where the <node-url> should be on the format of
-              'akka.<protocol>://<actor-system-name>@<hostname>:<port>'
+Where the <node-url> should be on the format of
+  'akka.<protocol>://<actor-system-name>@<hostname>:<port>'
             "
             };
 
