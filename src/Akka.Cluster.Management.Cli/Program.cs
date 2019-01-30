@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -16,8 +17,8 @@ namespace Akka.Cluster.Management.Cli
 {
     internal static class Program
     {
-        private const string DefaultHostname = "127.0.0.1";
-        private const string DefaultPort = "19999";
+        private static readonly string DefaultHostname = ConfigurationManager.AppSettings["hostname"] ?? "127.0.0.1";
+        private static readonly string DefaultPort = ConfigurationManager.AppSettings["port"] ?? "19999";
 
         private static int Main(string[] args)
         {
@@ -34,7 +35,7 @@ namespace Akka.Cluster.Management.Cli
             {
                 Name = "akka-cluster",
                 FullName = "Akka Management Cluster HTTP",
-                ShortVersionGetter = () => "0.6.2",
+                ShortVersionGetter = () => "0.6.3",
                 ExtendedHelpText = @"
             Examples: 
               akka-cluster cluster-status
