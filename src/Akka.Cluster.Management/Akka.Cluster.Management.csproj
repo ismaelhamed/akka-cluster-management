@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net461</TargetFramework>
-    <Version>0.7.0</Version>
+    <Version>0.6.4</Version>
     <Authors>Ismael Hamed</Authors>
     <PackageTags>akka;akka-cluster;management;operations;ops;microservices;</PackageTags>
     <Copyright>Copyright © 2019 Ismael Hamed</Copyright>
@@ -19,7 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Akka.Cluster.Sharding" Version="1.3.12-beta" />
+    <PackageReference Include="Akka" Version="1.3.10" />
+    <PackageReference Include="Akka.Cluster.Sharding" Version="1.3.10-beta" />
     <PackageReference Include="Dynamitey" Version="2.0.9.136" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.6" />
     <PackageReference Include="Microsoft.AspNet.WebApi.OwinSelfHost" Version="5.2.6" />

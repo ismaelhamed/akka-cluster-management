@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -35,7 +35,7 @@ namespace Akka.Cluster.Management.Cli
             {
                 Name = "akka-cluster",
                 FullName = "Akka Management Cluster HTTP",
-                ShortVersionGetter = () => "0.7.0",
+                ShortVersionGetter = () => "0.6.4",
                 ExtendedHelpText = @"
 Examples: 
   akka-cluster cluster-status
