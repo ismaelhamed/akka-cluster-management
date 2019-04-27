@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web.Http;
 using Akka.Actor;
 using Akka.Configuration;
