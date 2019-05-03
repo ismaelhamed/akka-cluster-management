@@ -5,9 +5,10 @@
     <Version>0.6.4</Version>
     <Authors>Ismael Hamed</Authors>
     <PackageTags>akka;akka-cluster;management;operations;ops;microservices;</PackageTags>
-    <Copyright>Copyright © 2019 Ismael Hamed</Copyright>
+    <Copyright>Copyright © 2017-2019 Ismael Hamed</Copyright>
     <PackageProjectUrl>https://github.com/ismaelhamed/akka-cluster-management</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Akka Cluster HTTP Management is a module that allows you interaction with an akka-cluster through an HTTP interface.</Description>
   </PropertyGroup>
 
   <ItemGroup>
