@@ -49,7 +49,7 @@ namespace Akka.Cluster.Http.Management
 
         public static Config DefaultConfiguration()
         {
-            return ConfigurationFactory.FromResource<ClusterHttpManagement>("Akka.Cluster.Http.Management.reference.conf");
+            return ConfigurationFactory.FromResource<ClusterHttpManagement>("Akka.Cluster.Management.reference.conf");
         }
 
         public void Start()
