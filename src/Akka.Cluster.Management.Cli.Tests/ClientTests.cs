@@ -1,9 +1,8 @@
+using System.IO;
+using System.Linq;
 using Akka.Cluster.Management.Cli.Models;
 using FluentAssertions;
 using Newtonsoft.Json;
-using System;
-using System.IO;
-using System.Linq;
 using Xunit;
 
 namespace Akka.Cluster.Management.Cli.Tests
@@ -11,42 +10,31 @@ namespace Akka.Cluster.Management.Cli.Tests
     public class ClientTests
     {
         [Fact]
-        public void Curate_Unreachable_Nodes_On_ClusterStatus_Based_On_The_Observability_Collection()
+        public void Curated_nodes_based_on_the_observability_should_not_be_equivalent_to_the_actual_unreachable()
         {
             // Arrange
-            var result = JsonConvert.DeserializeObject<ClusterMembers>(File.ReadAllText(@"stubs\members.json"));
+            var result = JsonConvert.DeserializeObject<ClusterMembers>(File.ReadAllText(@"stubs\members2.json"));
 
             // Act
             var unreachable = result.Unreachable.Select(u => u.Node).ToArray();
-
-            var curated = result.Unreachable
-                .Select(current => new { current, count = current.ObservedBy.Count(node => !unreachable.Contains(node)) })
-                .Where(t => t.count >= Math.Min(5, result.Members.Length / 2 + 1))
-                .Select(t => t.current.Node).ToList();
-
-            var members = result.Members.Select(re => curated.Contains(re.Node)
-                ? new { re.Node, Status = "Unreachable", Roles = string.Join(", ", re.Roles), Leader = re.Node == result.Leader ? "(leader)" : string.Empty }
-                : new { re.Node, re.Status, Roles = string.Join(", ", re.Roles), Leader = re.Node == result.Leader ? "(leader)" : string.Empty });
+            var curated = result.CuratedUnreachable();
 
             // Assert
             unreachable.Should().NotBeEquivalentTo(curated);
         }
 
         [Fact]
-        public void Curate_Unreachable_Nodes_Based_On_The_Observability_Collection()
+        public void Curated_nodes_based_on_the_observability_should_work_for_simple_clusters()
         {
             // Arrange
-            var result = JsonConvert.DeserializeObject<ClusterMembers>(File.ReadAllText(@"stubs\members.json"));
+            var result = JsonConvert.DeserializeObject<ClusterMembers>(File.ReadAllText(@"stubs\members_sigle_node.json"));
 
             // Act
             var unreachable = result.Unreachable.Select(u => u.Node).ToArray();
-            var curated = result.Unreachable
-                .Select(current => new { current, count = current.ObservedBy.Count(node => !unreachable.Contains(node)) })
-                .Where(t => t.count >= Math.Min(5, result.Members.Length / 2 + 1))
-                .Select(t => t.current.Node).ToArray();
+            var curated = result.CuratedUnreachable();
 
             // Assert
-            unreachable.Should().NotBeEquivalentTo(curated);
+            unreachable.Should().BeEquivalentTo(curated);
         }
     }
 }

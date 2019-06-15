@@ -1,4 +1,4 @@
-﻿namespace Akka.Cluster.Management.Cli.Models
+namespace Akka.Cluster.Management.Cli.Models
 {
     public class ClusterMember
     {

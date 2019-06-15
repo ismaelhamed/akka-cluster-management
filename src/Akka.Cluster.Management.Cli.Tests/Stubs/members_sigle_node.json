@@ -1,0 +1,32 @@
+{
+  "selfNode": "akka.tcp://dlmshe@192.168.1.49:4200",
+  "members": [
+    {
+      "node": "akka.tcp://dlmshe@192.168.1.49:4200",
+      "nodeUid": "776201154",
+      "status": "Up",
+      "roles": [
+        "cluster-management",
+        "seed"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@192.168.1.49:49771",
+      "nodeUid": "1865550654",
+      "status": "Up",
+      "roles": [
+        "pubsub",
+        "communications"
+      ]
+    }
+  ],
+  "unreachable": [
+    {
+      "node": "akka.tcp://dlmshe@192.168.1.49:49771",
+      "observedBy": [
+        "akka.tcp://dlmshe@192.168.1.49:4200"
+      ]
+    }
+  ],
+  "leader": "akka.tcp://dlmshe@192.168.1.49:4200"
+}

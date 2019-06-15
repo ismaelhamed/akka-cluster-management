@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Cluster.Management.Hos
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Management", "Akka.Cluster.Management\Akka.Cluster.Management.csproj", "{F79EC05D-E3E1-4477-B683-6653C2EEB3A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Cluster.Management.Cli.Tests", "Akka.Cluster.Management.Cli.Tests\Akka.Cluster.Management.Cli.Tests.csproj", "{B2226B7A-690A-4728-BE42-7E418987EBAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Management.Cli.Tests", "Akka.Cluster.Management.Cli.Tests\Akka.Cluster.Management.Cli.Tests.csproj", "{B2226B7A-690A-4728-BE42-7E418987EBAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

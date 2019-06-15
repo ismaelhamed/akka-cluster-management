@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Stubs\members2.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.7.0" />
     <PackageReference Include="Moq" Version="4.11.0" />
     <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
@@ -24,10 +28,10 @@
     <None Update="Stubs\members3.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Stubs\members2.json">
+    <None Update="Stubs\members.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Stubs\members.json">
+    <None Update="Stubs\members_sigle_node.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

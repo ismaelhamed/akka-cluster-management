@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\ClusterMembers.cs" />
+    <Compile Include="Models\ClusterMembersExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\CommandLineApplicationExtensions.cs" />
