@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -35,7 +35,7 @@ namespace Akka.Cluster.Management.Cli
             {
                 Name = "akka-cluster",
                 FullName = "Akka Management Cluster HTTP",
-                ShortVersionGetter = () => "0.7.0",
+                ShortVersionGetter = () => "0.7.1",
                 ExtendedHelpText = @"
 Examples: 
   akka-cluster cluster-status
@@ -109,14 +109,16 @@ Where the <node-url> should be on the format of
 
                 var nodeHostnameArgument = command.Option("--hostname <node-hostname>", "", CommandOptionType.SingleValue);
                 var nodePortArgument = command.Option("--port <node-port>", "", CommandOptionType.SingleValue);
+                var curateArgument = command.Option("--curate", "Simple best-effort attempt to curate the unreachable nodes", CommandOptionType.NoValue);
 
                 command.HelpOption("-?|-h|--help");
                 command.OnExecute(() =>
                 {
                     var nodeHostname = nodeHostnameArgument.Value() ?? DefaultHostname;
                     var nodePort = int.Parse(nodePortArgument.Value() ?? DefaultPort);
+                    var useFilter = curateArgument.HasValue();
 
-                    return GetClusterStatus(nodeHostname, nodePort);
+                    return GetClusterStatus(nodeHostname, nodePort, useFilter);
                 });
             });
 
@@ -162,14 +164,16 @@ Where the <node-url> should be on the format of
 
                 var nodeHostnameArgument = command.Option("--hostname <node-hostname>", "", CommandOptionType.SingleValue);
                 var nodePortArgument = command.Option("--port <node-port>", "", CommandOptionType.SingleValue);
+                var curateArgument = command.Option("--curate", "Simple best-effort attempt to curate the unreachable nodes", CommandOptionType.NoValue);
 
                 command.HelpOption("-?|-h|--help");
                 command.OnExecute(() =>
                 {
                     var nodeHostname = nodeHostnameArgument.Value() ?? DefaultHostname;
                     var nodePort = int.Parse(nodePortArgument.Value() ?? DefaultPort);
+                    var useFilter = curateArgument.HasValue();
 
-                    return GetUnreachable(nodeHostname, nodePort);
+                    return GetUnreachable(nodeHostname, nodePort, useFilter);
                 });
             });
 
@@ -288,7 +292,7 @@ Where the <node-url> should be on the format of
                 }
             });
 
-        private static int GetClusterStatus(string hostname, int port) =>
+        private static int GetClusterStatus(string hostname, int port, bool useFilter = false) =>
             Execute(async () =>
             {
                 try
@@ -306,6 +310,16 @@ Where the <node-url> should be on the format of
                             var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
 
                             var unreachable = result.Unreachable.Select(u => u.Node).ToArray();
+
+                            if (useFilter)
+                            {
+                                var unreachable1 = unreachable;
+                                unreachable = result.Unreachable
+                                    .Select(current => new { current, count = current.ObservedBy.Count(node => !unreachable1.Contains(node)) })
+                                    .Where(t => t.count >= Math.Min(5, result.Members.Length / 2 + 1))
+                                    .Select(t => t.current.Node).ToArray();
+                            }
+
                             var members = result.Members.Select(re => unreachable.Contains(re.Node)
                                 ? new { re.Node, Status = "Unreachable", Roles = string.Join(", ", re.Roles), Leader = re.Node == result.Leader ? "(leader)" : string.Empty }
                                 : new { re.Node, re.Status, Roles = string.Join(", ", re.Roles), Leader = re.Node == result.Leader ? "(leader)" : string.Empty });
@@ -383,7 +397,7 @@ Where the <node-url> should be on the format of
                 }
             });
 
-        private static int GetUnreachable(string hostname, int port) =>
+        private static int GetUnreachable(string hostname, int port, bool useFilter = false) =>
             Execute(async () =>
             {
                 try
@@ -399,7 +413,19 @@ Where the <node-url> should be on the format of
                         {
                             var data = await response.Content.ReadAsStringAsync();
                             var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
-                            if (result.Unreachable.Any())
+
+                            var unreachable = result.Unreachable.Select(u => u.Node).ToArray();
+
+                            if (useFilter)
+                            {
+                                var unreachable1 = unreachable;
+                                unreachable = result.Unreachable
+                                    .Select(current => new { current, count = current.ObservedBy.Count(node => !unreachable1.Contains(node)) })
+                                    .Where(t => t.count >= Math.Min(5, result.Members.Length / 2 + 1))
+                                    .Select(t => t.current.Node).ToArray();
+                            }
+
+                            if (unreachable.Any())
                             {
                                 var table = new ConsoleTable(new[] { "NODE" }, new ConsoleTableSettings());
                                 Array.ForEach(result.Unreachable, member => table.AddRow(new[] { member.Node }));

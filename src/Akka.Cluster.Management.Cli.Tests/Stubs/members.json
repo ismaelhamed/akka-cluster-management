@@ -1,0 +1,211 @@
+{
+  "selfNode": "akka.tcp://dlmshe@tdlmsm-lh2:4200",
+  "members": [
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-com1:63362",
+      "nodeUid": "1071171498",
+      "status": "Up",
+      "roles": [
+        "pubsub",
+        "communications"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-com2:50052",
+      "nodeUid": "73567850",
+      "status": "Joining",
+      "roles": [
+        "pubsub",
+        "communications"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51178",
+      "nodeUid": "1257320269",
+      "status": "Up",
+      "roles": [
+        "api"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51204",
+      "nodeUid": "1917826126",
+      "status": "Up",
+      "roles": [
+        "inv-read"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51213",
+      "nodeUid": "811602054",
+      "status": "Up",
+      "roles": [
+        "pubsub",
+        "inventory"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51291",
+      "nodeUid": "829499148",
+      "status": "Up",
+      "roles": [
+        "pubsub",
+        "operations"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51362",
+      "nodeUid": "1289275754",
+      "status": "Up",
+      "roles": [
+        "jobscheduling"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51395",
+      "nodeUid": "2107225684",
+      "status": "Up",
+      "roles": [
+        "aggregator"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51478",
+      "nodeUid": "537329825",
+      "status": "Up",
+      "roles": [
+        "pubsub",
+        "events"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core2:54791",
+      "nodeUid": "1138212410",
+      "status": "Up",
+      "roles": [
+        "api"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core2:54823",
+      "nodeUid": "221362423",
+      "status": "Up",
+      "roles": [
+        "pubsub",
+        "events"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core2:54838",
+      "nodeUid": "294857414",
+      "status": "Up",
+      "roles": [
+        "inv-read"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core2:54907",
+      "nodeUid": "548368381",
+      "status": "Up",
+      "roles": [
+        "pubsub",
+        "inventory"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core2:54924",
+      "nodeUid": "257204598",
+      "status": "Up",
+      "roles": [
+        "pubsub",
+        "operations"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core2:54964",
+      "nodeUid": "813169545",
+      "status": "Up",
+      "roles": [
+        "aggregator"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core2:55053",
+      "nodeUid": "1193858294",
+      "status": "Up",
+      "roles": [
+        "jobscheduling"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-lh1:4200",
+      "nodeUid": "683289713",
+      "status": "Up",
+      "roles": [
+        "cluster-management",
+        "seed"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-lh2:4200",
+      "nodeUid": "507601066",
+      "status": "Up",
+      "roles": [
+        "cluster-management",
+        "seed"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-lh3:4200",
+      "nodeUid": "879270695",
+      "status": "Up",
+      "roles": [
+        "cluster-management",
+        "seed"
+      ]
+    }
+  ],
+  "unreachable": [
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51213",
+      "observedBy": [
+        "akka.tcp://dlmshe@tdlmsm-com1:63362"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51291",
+      "observedBy": [
+        "akka.tcp://dlmshe@tdlmsm-com1:63362"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-com1:63362",
+      "observedBy": [
+        "akka.tcp://dlmshe@tdlmsm-lh2:4200",
+        "akka.tcp://dlmshe@tdlmsm-lh1:4200",
+        "akka.tcp://dlmshe@tdlmsm-core2:54964",
+        "akka.tcp://dlmshe@tdlmsm-lh3:4200",
+        "akka.tcp://dlmshe@tdlmsm-core2:55053"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51178",
+      "observedBy": [
+        "akka.tcp://dlmshe@tdlmsm-com1:63362"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51362",
+      "observedBy": [
+        "akka.tcp://dlmshe@tdlmsm-com1:63362"
+      ]
+    },
+    {
+      "node": "akka.tcp://dlmshe@tdlmsm-core1:51204",
+      "observedBy": [
+        "akka.tcp://dlmshe@tdlmsm-com1:63362"
+      ]
+    }
+  ],
+  "leader": "akka.tcp://dlmshe@tdlmsm-core1:51395"
+}
