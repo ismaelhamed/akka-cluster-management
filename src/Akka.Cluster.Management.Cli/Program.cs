@@ -309,9 +309,16 @@ Where the <node-url> should be on the format of
                             var data = await response.Content.ReadAsStringAsync();
                             var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
 
-                            var unreachable = useFilter
-                                ? result.CuratedUnreachable()
-                                : result.Unreachable.Select(u => u.Node).ToArray();
+                            var unreachable = result.Unreachable.Select(u => u.Node).ToArray();
+
+                            if (useFilter)
+                            {
+                                var unreachable1 = unreachable;
+                                unreachable = result.Unreachable
+                                    .Select(current => new { current, count = current.ObservedBy.Count(node => !unreachable1.Contains(node)) })
+                                    .Where(t => t.count >= Math.Min(5, result.Members.Length / 2 + 1))
+                                    .Select(t => t.current.Node).ToArray();
+                            }
 
                             var members = result.Members.Select(re => unreachable.Contains(re.Node)
                                 ? new { re.Node, Status = "Unreachable", Roles = string.Join(", ", re.Roles), Leader = re.Node == result.Leader ? "(leader)" : string.Empty }
@@ -407,9 +414,16 @@ Where the <node-url> should be on the format of
                             var data = await response.Content.ReadAsStringAsync();
                             var result = JsonConvert.DeserializeObject<ClusterMembers>(data);
 
-                            var unreachable = useFilter
-                                ? result.CuratedUnreachable()
-                                : result.Unreachable.Select(u => u.Node).ToArray();
+                            var unreachable = result.Unreachable.Select(u => u.Node).ToArray();
+
+                            if (useFilter)
+                            {
+                                var unreachable1 = unreachable;
+                                unreachable = result.Unreachable
+                                    .Select(current => new { current, count = current.ObservedBy.Count(node => !unreachable1.Contains(node)) })
+                                    .Where(t => t.count >= Math.Min(5, result.Members.Length / 2 + 1))
+                                    .Select(t => t.current.Node).ToArray();
+                            }
 
                             if (unreachable.Any())
                             {

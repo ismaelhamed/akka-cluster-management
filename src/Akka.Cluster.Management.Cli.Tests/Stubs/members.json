@@ -6,8 +6,7 @@
       "nodeUid": "1071171498",
       "status": "Up",
       "roles": [
-        "pubsub",
-        "communications"
+        "frontend"
       ]
     },
     {
@@ -15,8 +14,7 @@
       "nodeUid": "73567850",
       "status": "Joining",
       "roles": [
-        "pubsub",
-        "communications"
+        "frontend"
       ]
     },
     {
@@ -24,7 +22,7 @@
       "nodeUid": "1257320269",
       "status": "Up",
       "roles": [
-        "api"
+        "backend"
       ]
     },
     {
@@ -32,7 +30,7 @@
       "nodeUid": "1917826126",
       "status": "Up",
       "roles": [
-        "inv-read"
+        "backend-read"
       ]
     },
     {
@@ -40,8 +38,7 @@
       "nodeUid": "811602054",
       "status": "Up",
       "roles": [
-        "pubsub",
-        "inventory"
+        "backend"
       ]
     },
     {
@@ -49,8 +46,7 @@
       "nodeUid": "829499148",
       "status": "Up",
       "roles": [
-        "pubsub",
-        "operations"
+        "backend-read"
       ]
     },
     {
@@ -58,7 +54,7 @@
       "nodeUid": "1289275754",
       "status": "Up",
       "roles": [
-        "jobscheduling"
+        "backend"
       ]
     },
     {
@@ -66,7 +62,7 @@
       "nodeUid": "2107225684",
       "status": "Up",
       "roles": [
-        "aggregator"
+        "frontend"
       ]
     },
     {
@@ -74,8 +70,7 @@
       "nodeUid": "537329825",
       "status": "Up",
       "roles": [
-        "pubsub",
-        "events"
+        "backend"
       ]
     },
     {
@@ -83,7 +78,7 @@
       "nodeUid": "1138212410",
       "status": "Up",
       "roles": [
-        "api"
+        "frontend"
       ]
     },
     {
@@ -91,8 +86,7 @@
       "nodeUid": "221362423",
       "status": "Up",
       "roles": [
-        "pubsub",
-        "events"
+        "backend"
       ]
     },
     {
@@ -100,7 +94,7 @@
       "nodeUid": "294857414",
       "status": "Up",
       "roles": [
-        "inv-read"
+        "backend-read"
       ]
     },
     {
@@ -108,8 +102,7 @@
       "nodeUid": "548368381",
       "status": "Up",
       "roles": [
-        "pubsub",
-        "inventory"
+        "backend"
       ]
     },
     {
@@ -117,8 +110,7 @@
       "nodeUid": "257204598",
       "status": "Up",
       "roles": [
-        "pubsub",
-        "operations"
+        "backend"
       ]
     },
     {
@@ -126,7 +118,7 @@
       "nodeUid": "813169545",
       "status": "Up",
       "roles": [
-        "aggregator"
+        "backend"
       ]
     },
     {
@@ -134,7 +126,7 @@
       "nodeUid": "1193858294",
       "status": "Up",
       "roles": [
-        "jobscheduling"
+        "backend"
       ]
     },
     {

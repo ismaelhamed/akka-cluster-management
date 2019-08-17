@@ -1,12 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Stubs\members2.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.7.0" />
@@ -31,7 +27,13 @@
     <None Update="Stubs\members.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Stubs\members_sigle_node.json">
+    <None Update="Stubs\members_complex.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Stubs\members_two_node_cluster.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Stubs\members_single_node_cluster.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
