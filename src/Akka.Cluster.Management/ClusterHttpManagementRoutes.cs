@@ -96,8 +96,12 @@ namespace Akka.Cluster.Management
                         });
 
                         var leader = ((Address)state.Leader).ToString();
+                        var oldest = cluster.State.Members.Where(node => node.Status == MemberStatus.Up)
+                            .OrderBy(member => member, MemberExt.AgeOrdering)
+                            .Select(m => m.Address.ToString())
+                            .Last(); // we are only interested in the oldest one that is still Up
 
-                        Sender.Tell(new Complete.Success(new ClusterMembers(cluster.SelfAddress.ToString(), members.ToArray(), unreachable.ToArray(), leader)));
+                        Sender.Tell(new Complete.Success(new ClusterMembers(cluster.SelfAddress.ToString(), members.ToArray(), unreachable.ToArray(), leader, oldest)));
                         break;
                     }
                 case GetMember msg:
@@ -177,5 +181,23 @@ namespace Akka.Cluster.Management
 
         private static ClusterMember MemberToClusterMember(Member member) =>
             new ClusterMember(member.UniqueAddress.Address.ToString(), member.UniqueAddress.Uid.ToString(), member.Status.ToString(), member.Roles.ToArray());
+    }
+
+    public class MemberExt
+    {
+        /// <summary>
+        /// Compares members by their upNumber to determine which is oldest / youngest.
+        /// </summary>
+        public static readonly AgeComparer AgeOrdering = new AgeComparer();
+
+        public class AgeComparer : IComparer<Member>
+        {
+            public int Compare(Member x, Member y)
+            {
+                if (x != null && x.Equals(y)) return 0;
+                if (x != null && x.IsOlderThan(y)) return -1;
+                return 1;
+            }
+        }
     }
 }

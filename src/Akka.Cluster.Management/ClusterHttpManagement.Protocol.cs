@@ -39,13 +39,15 @@ namespace Akka.Cluster.Management
         public readonly ClusterMember[] Members;
         public readonly ClusterUnreachableMember[] Unreachable;
         public readonly string Leader;
+        public readonly string Oldest;
 
-        public ClusterMembers(string selfNode, ClusterMember[] members = null, ClusterUnreachableMember[] unreachable = null, string leader = null)
+        public ClusterMembers(string selfNode, ClusterMember[] members = null, ClusterUnreachableMember[] unreachable = null, string leader = null, string oldest = null)
         {
             SelfNode = selfNode;
             Members = members;
             Unreachable = unreachable;
             Leader = leader;
+            Oldest = oldest;
         }
     }
 
