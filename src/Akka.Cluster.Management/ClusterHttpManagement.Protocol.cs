@@ -1,4 +1,4 @@
-﻿namespace Akka.Cluster.Http.Management
+namespace Akka.Cluster.Management
 {
     public class ClusterMember
     {
@@ -53,20 +53,14 @@
     {
         public readonly string Message;
 
-        public ClusterHttpManagementMessage(string message)
-        {
-            Message = message;
-        }
+        public ClusterHttpManagementMessage(string message) => Message = message;
     }
 
     public class ShardDetails
     {
         public readonly ShardRegionInfo[] Regions;
 
-        public ShardDetails(ShardRegionInfo[] regions)
-        {
-            Regions = regions;
-        }
+        public ShardDetails(ShardRegionInfo[] regions) => Regions = regions;
     }
 
     public class ShardRegionInfo

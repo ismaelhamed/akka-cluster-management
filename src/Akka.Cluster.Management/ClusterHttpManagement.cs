@@ -1,13 +1,15 @@
-using System;
-using System.Web.Http;
+using System.Net;
 using Akka.Actor;
 using Akka.Configuration;
-using Microsoft.Owin.Hosting;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using Owin;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-namespace Akka.Cluster.Http.Management
+namespace Akka.Cluster.Management
 {
     /// <inheritdoc />
     /// <summary>
@@ -15,7 +17,7 @@ namespace Akka.Cluster.Http.Management
     /// </summary>
     public class ClusterHttpManagement : IExtension
     {
-        private IDisposable server;
+        private IWebHost host;
         private readonly string pathPrefix;
 
         public ClusterHttpManagementSettings Settings { get; }
@@ -42,52 +44,45 @@ namespace Akka.Cluster.Http.Management
             SystemActors.RoutesHandler = system.ActorOf(ClusterHttpManagementRoutes.Props(Cluster.Get(system)), "routes");
         }
 
-        public static ClusterHttpManagement Get(ActorSystem system)
-        {
-            return system.WithExtension<ClusterHttpManagement, ClusterHttpManagementExtensionProvider>();
-        }
+        public static ClusterHttpManagement Get(ActorSystem system) =>
+            system.WithExtension<ClusterHttpManagement, ClusterHttpManagementExtensionProvider>();
 
-        public static Config DefaultConfiguration()
-        {
-            return ConfigurationFactory.FromResource<ClusterHttpManagement>("Akka.Cluster.Http.Management.reference.conf");
-        }
+        public static Config DefaultConfiguration() =>
+            ConfigurationFactory.FromResource<ClusterHttpManagement>("Akka.Cluster.Management.reference.conf");
 
         public void Start()
         {
-            // NOTE: This module does not provide security by default. It's the developer's choice to add security to this API.
-            var url = $"http://{Settings.ClusterHttpManagementHostname}:{Settings.ClusterHttpManagementPort}";
-
-            server = WebApp.Start(url, app =>
-            {
-                app.Map(pathPrefix, api =>
+            host = WebHost.CreateDefaultBuilder()
+                .SuppressStatusMessages(true)
+                .ConfigureServices(services =>
                 {
-                    var config = new HttpConfiguration();
-                    config.MapHttpAttributeRoutes();
+                    services.AddMvcCore()
+                        .AddFormatterMappings()
+                        .AddJsonFormatters()
+                        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-                    var settings = config.Formatters.JsonFormatter.SerializerSettings;
-                    settings.Formatting = Formatting.Indented;
-                    settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    services.AddLogging(builder => builder.AddFilter("Microsoft", LogLevel.Warning));
+                })
+                .Configure(app =>
+                {
+                    app.UsePathBase(new PathString(pathPrefix));
+                    app.UseMvc();
+                })
+                .UseKestrel(options =>
+                {
+                    // NOTE: This module does not provide security by default. It's the developer's choice to add security to this API.
+                    options.Listen(IPAddress.Parse(Settings.ClusterHttpManagementHostname), Settings.ClusterHttpManagementPort);
+                })
+                .Build();
 
-                    // Disable default XmlFormatter
-                    config.Formatters.Remove(config.Formatters.XmlFormatter);
-
-                    // Now add in the WebAPI middleware
-                    api.UseWebApi(config);
-                });
-            });
+            host.Start();
         }
 
-        public void Stop()
-        {
-            server.Dispose();
-        }
+        public void Stop() => host.StopAsync().Wait();
     }
 
     public class ClusterHttpManagementExtensionProvider : ExtensionIdProvider<ClusterHttpManagement>
     {
-        public override ClusterHttpManagement CreateExtension(ExtendedActorSystem system)
-        {
-            return new ClusterHttpManagement(system);
-        }
+        public override ClusterHttpManagement CreateExtension(ExtendedActorSystem system) => new ClusterHttpManagement(system);
     }
 }

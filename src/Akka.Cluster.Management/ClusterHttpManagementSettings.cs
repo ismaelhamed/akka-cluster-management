@@ -1,6 +1,6 @@
-﻿using Akka.Configuration;
+using Akka.Configuration;
 
-namespace Akka.Cluster.Http.Management
+namespace Akka.Cluster.Management
 {
     public class ClusterHttpManagementSettings
     {

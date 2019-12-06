@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.IO;
 using Akka.Actor;
-using Akka.Cluster.Http.Management;
 using Akka.Cluster.Sharding;
 using Akka.Configuration;
 
@@ -23,22 +22,24 @@ namespace Akka.Cluster.Management.Host
             }
 
             actorSystem = ActorSystem.Create(actorSystemName, hoconConfig);
-            ClusterSharding.Get(actorSystem).Start(
-                typeName: "my-actor",
-                entityProps: Props.Create<MyActor>(),
-                settings: ClusterShardingSettings.Create(actorSystem),
-                messageExtractor: new MessageExtractor());
 
+            Cluster.Get(actorSystem).RegisterOnMemberUp(() =>
+            {
+                ClusterSharding.Get(actorSystem).Start(
+                    typeName: "my-actor",
+                    entityProps: Props.Create<MyActor>(),
+                    settings: ClusterShardingSettings.Create(actorSystem),
+                    messageExtractor: new MessageExtractor());
+            });
+
+            // Akka Management hosts the HTTP routes used by bootstrap
             ClusterHttpManagement.Get(actorSystem).Start();
-
-            Console.WriteLine("Press Enter to exit...");
-            Console.ReadLine();
         }
 
         public void Stop()
         {
             ClusterHttpManagement.Get(actorSystem).Stop();
-            actorSystem.Terminate();
+            CoordinatedShutdown.Get(actorSystem).Run(CoordinatedShutdown.ClrExitReason.Instance).Wait();
         }
     }
 

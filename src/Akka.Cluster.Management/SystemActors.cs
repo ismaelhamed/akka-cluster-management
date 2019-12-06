@@ -1,6 +1,6 @@
-﻿using Akka.Actor;
+using Akka.Actor;
 
-namespace Akka.Cluster.Http.Management
+namespace Akka.Cluster.Management
 {
     public static class SystemActors
     {
