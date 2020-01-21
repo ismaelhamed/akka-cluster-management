@@ -2,13 +2,14 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Version>0.7.0</Version>
+    <Version>0.7.2</Version>
     <Authors>Ismael Hamed</Authors>
     <PackageTags>akka;akka-cluster;management;operations;ops;microservices;</PackageTags>
-    <Copyright>Copyright © 2019 Ismael Hamed</Copyright>
-    <PackageProjectUrl>https://github.com/ismaelhamed/akka-streams-msmq</PackageProjectUrl>
+    <Copyright>Copyright © 2020 Ismael Hamed</Copyright>
+    <PackageProjectUrl>https://github.com/ismaelhamed/akka-cluster-management</PackageProjectUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <LangVersion>8.0</LangVersion>
+    <RepositoryUrl>https://github.com/ismaelhamed/akka-cluster-management</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

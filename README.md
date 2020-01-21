@@ -42,7 +42,8 @@ Example response:
     }
   ],
   "unreachable": [],
-  "leader: "akka.tcp://test@10.10.10.10:1111"
+  "leader: "akka.tcp://test@10.10.10.10:1111",
+  "oldest: "akka.tcp://test@10.10.10.10:1111"
 }
 ```
 

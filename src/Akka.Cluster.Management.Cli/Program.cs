@@ -35,7 +35,7 @@ namespace Akka.Cluster.Management.Cli
             {
                 Name = "akka-cluster",
                 FullName = "Akka Management Cluster HTTP",
-                ShortVersionGetter = () => "0.7.1",
+                ShortVersionGetter = () => "0.7.2",
                 ExtendedHelpText = @"
 Examples: 
   akka-cluster cluster-status
