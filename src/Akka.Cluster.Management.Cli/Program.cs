@@ -1,4 +1,5 @@
 using System.Configuration;
+using System.Reflection;
 using System.Threading;
 using Akka.Cluster.Management.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
@@ -27,7 +28,7 @@ namespace Akka.Cluster.Management.Cli
             {
                 Name = "akka-cluster",
                 FullName = "Akka Management Cluster HTTP",
-                ShortVersionGetter = () => "0.7.3",
+                ShortVersionGetter = () => Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
                 ExtendedHelpText = @"
 Where the <node-url> should be on the format of
   'akka.<protocol>://<actor-system-name>@<hostname>:<port>'
@@ -161,5 +162,10 @@ Examples: .\akka-cluster --hostname localhost --port 19999 unreachable
             // invalid args syntax
             return app.Execute(args);
         }
+
+        //public string ShowVersion()
+        //{
+        //    var version = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version;
+        //}
     }
 }
