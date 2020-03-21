@@ -86,6 +86,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\ClusterClient.cs" />
     <Compile Include="Models\ClusterMembers.cs" />
     <Compile Include="Models\ClusterMembersExtensions.cs" />
     <Compile Include="Program.cs" />
