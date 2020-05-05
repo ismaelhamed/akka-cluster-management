@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net47</TargetFramework>
     <Version>0.7.1</Version>
     <Authors>Ismael Hamed</Authors>
     <PackageTags>akka;akka-cluster;management;operations;ops;microservices;</PackageTags>
