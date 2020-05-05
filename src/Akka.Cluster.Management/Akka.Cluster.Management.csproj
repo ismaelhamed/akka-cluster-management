@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
-    <Version>0.7.2</Version>
+    <Version>0.7.1</Version>
     <Authors>Ismael Hamed</Authors>
     <PackageTags>akka;akka-cluster;management;operations;ops;microservices;</PackageTags>
     <Copyright>Copyright © 2020 Ismael Hamed</Copyright>
@@ -10,6 +10,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <LangVersion>8.0</LangVersion>
     <RepositoryUrl>https://github.com/ismaelhamed/akka-cluster-management</RepositoryUrl>
+    <UserSecretsId>024cdd6d-95ce-4232-8b38-dafe4489beea</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

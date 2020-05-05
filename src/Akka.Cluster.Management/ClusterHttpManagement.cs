@@ -1,4 +1,3 @@
-using System.Net;
 using Akka.Actor;
 using Akka.Configuration;
 using Microsoft.AspNetCore;
@@ -68,11 +67,8 @@ namespace Akka.Cluster.Management
                     app.UsePathBase(new PathString(pathPrefix));
                     app.UseMvc();
                 })
-                .UseKestrel(options =>
-                {
-                    // NOTE: This module does not provide security by default. It's the developer's choice to add security to this API.
-                    options.Listen(IPAddress.Parse(Settings.ClusterHttpManagementHostname), Settings.ClusterHttpManagementPort);
-                })
+                // NOTE: This module does not provide security by default. It's the developer's choice to add security to this API.
+                .UseUrls($"http://{Settings.ClusterHttpManagementHostname}:{Settings.ClusterHttpManagementPort}")
                 .Build();
 
             host.Start();

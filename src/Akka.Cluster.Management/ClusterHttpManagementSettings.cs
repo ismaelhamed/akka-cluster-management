@@ -11,8 +11,8 @@ namespace Akka.Cluster.Management
 
         public ClusterHttpManagementSettings(Config config)
         {
-            ClusterHttpManagementPort = config.GetInt("port");
-            ClusterHttpManagementHostname = config.GetString("hostname");
+            ClusterHttpManagementPort = config.GetInt("port", 19999);
+            ClusterHttpManagementHostname = config.GetString("hostname", "localhost");
         }
     }
 }
