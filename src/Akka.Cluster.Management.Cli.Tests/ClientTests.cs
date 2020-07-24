@@ -13,7 +13,7 @@ namespace Akka.Cluster.Management.Cli.Tests
         public void Curated_nodes_based_on_the_observability_should_not_be_equivalent_to_the_actual_unreachable()
         {
             // Arrange
-            var result = JsonConvert.DeserializeObject<ClusterMembers>(File.ReadAllText(@"stubs\members2.json"));
+            var result = JsonConvert.DeserializeObject<ClusterMembers>(File.ReadAllText(@"stubs\members.json"));
 
             // Act
             var unreachable = result.Unreachable.Select(u => u.Node).ToArray();
