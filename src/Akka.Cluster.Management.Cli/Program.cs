@@ -39,8 +39,8 @@ Examples: .\akka-cluster --hostname localhost --port 19999 unreachable
             "
             };
 
-            var hostNameArgument = app.Option("--hostname <node-hostname>", "", CommandOptionType.SingleValue);
-            var portArgument = app.Option("--port <node-port>", "", CommandOptionType.SingleValue);
+            var hostNameArgument = app.Option("-hn|--hostname <node-hostname>", "", CommandOptionType.SingleValue);
+            var portArgument = app.Option("-p|--port <node-port>", "", CommandOptionType.SingleValue);
 
             app.Command("join", command =>
             {
