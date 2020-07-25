@@ -1,16 +1,21 @@
 using System;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Akka.Actor;
-using Akka.Cluster.Sharding;
 using Akka.Configuration;
+using Akka.Cluster.Sharding;
+using Akka.Util.Internal;
+using Microsoft.Extensions.Hosting;
 
 namespace Akka.Cluster.Management.Host
 {
-    public class Startup
+    public class Startup : IHostedService
     {
         private ActorSystem actorSystem;
 
-        public void Start()
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             var actorSystemName = "akka-cluster";
             var hoconConfig = ConfigurationFactory.ParseString(File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "application.conf"));
@@ -23,23 +28,27 @@ namespace Akka.Cluster.Management.Host
 
             actorSystem = ActorSystem.Create(actorSystemName, hoconConfig);
 
+            // Akka Management hosts the HTTP routes used by bootstrap
+            ClusterHttpManagement.Get(actorSystem).Start();
+
             Cluster.Get(actorSystem).RegisterOnMemberUp(() =>
             {
-                ClusterSharding.Get(actorSystem).Start(
+                var shardRegion = ClusterSharding.Get(actorSystem).Start(
                     typeName: "my-actor",
                     entityProps: Props.Create<MyActor>(),
                     settings: ClusterShardingSettings.Create(actorSystem),
                     messageExtractor: new MessageExtractor());
+
+                Enumerable.Range(1, 100).ForEach(i => shardRegion.Tell(new ShardEnvelope(Guid.NewGuid().ToString(), "hello!")));
             });
 
-            // Akka Management hosts the HTTP routes used by bootstrap
-            ClusterHttpManagement.Get(actorSystem).Start();
+            return Task.CompletedTask;
         }
 
-        public void Stop()
+        public Task StopAsync(CancellationToken cancellationToken)
         {
             ClusterHttpManagement.Get(actorSystem).Stop();
-            CoordinatedShutdown.Get(actorSystem).Run(CoordinatedShutdown.ClrExitReason.Instance).Wait();
+            return CoordinatedShutdown.Get(actorSystem).Run(CoordinatedShutdown.ClrExitReason.Instance);
         }
     }
 
@@ -57,22 +66,22 @@ namespace Akka.Cluster.Management.Host
 
     internal sealed class MessageExtractor : HashCodeMessageExtractor
     {
-        public MessageExtractor() : base(maxNumberOfShards: 100) { }
-        
-        public override string EntityId(object message)
-        {
-            switch(message)
+        public MessageExtractor()
+            : base(maxNumberOfShards: 10)
+        { }
+
+        public override string EntityId(object message) =>
+            message switch
             {
-                case ShardEnvelope e: return e.EntityId;
-                case ShardRegion.StartEntity start: return start.EntityId;
-            }
+                ShardEnvelope e => e.EntityId,
+                ShardRegion.StartEntity start => start.EntityId,
+                _ => null
+            };
 
-            return null;
-        }
-
-        public new object EntityMessage(object message) => (message as ShardEnvelope)?.Message ?? message;
+        public new object EntityMessage(object message) => ( message as ShardEnvelope )?.Message ?? message;
     }
 
     internal class MyActor : ReceiveActor
-    { }
+    {
+    }
 }

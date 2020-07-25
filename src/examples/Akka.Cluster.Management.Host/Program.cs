@@ -1,24 +1,29 @@
-﻿using Topshelf;
+﻿using System;
+using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Akka.Cluster.Management.Host
 {
-    internal static class Program
+    internal class Program
     {
         private static int Main(string[] args)
         {
-            return (int)HostFactory.Run(configurator =>
+            try
             {
-                configurator.Service<Startup>(s =>
-                {
-                    s.ConstructUsing(() => new Startup());
-                    s.WhenStarted(service => service.Start());
-                    s.WhenStopped(service => service.Stop());
-                });
-                configurator.RunAsLocalSystem();
-                configurator.SetServiceName("Akka Cluster Http Management");
-                configurator.SetDisplayName("Akka Cluster Http Management");
-                configurator.SetDescription("Akka Cluster Http Management allows you interaction with an Akka cluster through an HTTP interface.");
-            });
+                CreateHostBuilder(args).Build().Run();
+                return 0;
+            }
+            catch { return 1; }
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            new HostBuilder()
+                .ConfigureServices(services =>
+                {
+                    services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
+                    services.AddHostedService<Startup>();
+                })
+                .UseWindowsService();
     }
 }
