@@ -300,7 +300,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Akka.Cluster.Management\Akka.Cluster.Management.csproj">
-      <Project>{f79ec05d-e3e1-4477-b683-6653c2eeb3a2}</Project>
+      <Project>{b3064b7f-4c76-4a0e-8b4d-365f146f4223}</Project>
       <Name>Akka.Cluster.Management</Name>
     </ProjectReference>
   </ItemGroup>

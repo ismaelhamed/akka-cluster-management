@@ -15,9 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{14
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Cluster.Management.Host", "examples\Akka.Cluster.Management.Host\Akka.Cluster.Management.Host.csproj", "{56F1F913-97F9-4252-820E-7358147B1A8C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Management", "Akka.Cluster.Management\Akka.Cluster.Management.csproj", "{F79EC05D-E3E1-4477-B683-6653C2EEB3A2}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Management.Cli.Tests", "Akka.Cluster.Management.Cli.Tests\Akka.Cluster.Management.Cli.Tests.csproj", "{B2226B7A-690A-4728-BE42-7E418987EBAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Cluster.Management", "Akka.Cluster.Management\Akka.Cluster.Management.csproj", "{B3064B7F-4C76-4A0E-8B4D-365F146F4223}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,14 +33,14 @@ Global
 		{56F1F913-97F9-4252-820E-7358147B1A8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56F1F913-97F9-4252-820E-7358147B1A8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56F1F913-97F9-4252-820E-7358147B1A8C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F79EC05D-E3E1-4477-B683-6653C2EEB3A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F79EC05D-E3E1-4477-B683-6653C2EEB3A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F79EC05D-E3E1-4477-B683-6653C2EEB3A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F79EC05D-E3E1-4477-B683-6653C2EEB3A2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B2226B7A-690A-4728-BE42-7E418987EBAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B2226B7A-690A-4728-BE42-7E418987EBAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2226B7A-690A-4728-BE42-7E418987EBAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2226B7A-690A-4728-BE42-7E418987EBAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3064B7F-4C76-4A0E-8B4D-365F146F4223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3064B7F-4C76-4A0E-8B4D-365F146F4223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3064B7F-4C76-4A0E-8B4D-365F146F4223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3064B7F-4C76-4A0E-8B4D-365F146F4223}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
