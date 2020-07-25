@@ -4,7 +4,7 @@ Akka.NET Management Cluster HTTP, a port of the popular Java/Scala [library](htt
 
 The operations exposed comparable to the JMX interface `akka-cluster` provides.
 
-![alt text](doc/screenshot.jpg)
+![alt text](doc/screenshot.png)
 
 ## API Definition
 
