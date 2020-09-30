@@ -1,20 +1,36 @@
-﻿using System;
-using System.Reflection;
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
 
 namespace Akka.Cluster.Management.Host
 {
-    internal class Program
+    internal static class Program
     {
         private static int Main(string[] args)
         {
+             Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                .WriteTo.Console()
+                .CreateLogger();
+
             try
             {
+                Log.Information("Starting host...");
                 CreateHostBuilder(args).Build().Run();
                 return 0;
             }
-            catch { return 1; }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -24,6 +40,7 @@ namespace Akka.Cluster.Management.Host
                     services.Configure<ConsoleLifetimeOptions>(options => options.SuppressStatusMessages = true);
                     services.AddHostedService<Startup>();
                 })
-                .UseWindowsService();
+                .UseWindowsService()
+                .UseSerilog();
     }
 }
