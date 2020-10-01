@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -14,14 +14,14 @@ namespace Akka.Cluster.Management.Cli
 {
     internal class ClusterClient
     {
-        internal static int JoinMember(string hostname, int port, string nodeUrl) =>
+        internal static int JoinMember(string scheme, string hostname, int port, string nodeUrl) =>
             Execute(async () =>
             {
                 try
                 {
                     using var client = new HttpClient
                     {
-                        BaseAddress = new Uri($"http://{hostname}:{port}")
+                        BaseAddress = new Uri($"{scheme}://{hostname}:{port}")
                     };
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -44,14 +44,14 @@ namespace Akka.Cluster.Management.Cli
                 }
             });
 
-        internal static int DownMember(string hostname, int port, string nodeUrl) =>
+        internal static int DownMember(string scheme, string hostname, int port, string nodeUrl) =>
             Execute(async () =>
             {
                 try
                 {
                     using var client = new HttpClient
                     {
-                        BaseAddress = new Uri($"http://{hostname}:{port}")
+                        BaseAddress = new Uri($"{scheme}://{hostname}:{port}")
                     };
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -74,14 +74,14 @@ namespace Akka.Cluster.Management.Cli
                 }
             });
 
-        internal static int LeaveMember(string hostname, int port, string nodeUrl) =>
+        internal static int LeaveMember(string scheme, string hostname, int port, string nodeUrl) =>
             Execute(async () =>
             {
                 try
                 {
                     using var client = new HttpClient
                     {
-                        BaseAddress = new Uri($"http://{hostname}:{port}")
+                        BaseAddress = new Uri($"{scheme}://{hostname}:{port}")
                     };
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -104,14 +104,14 @@ namespace Akka.Cluster.Management.Cli
                 }
             });
 
-        internal static int GetClusterStatus(string hostname, int port, bool useFilter = false) =>
+        internal static int GetClusterStatus(string scheme, string hostname, int port, bool useFilter = false) =>
             Execute(async () =>
             {
                 try
                 {
-                    using var client = new HttpClient
+                    using var client = new HttpClient()
                     {
-                        BaseAddress = new Uri($"http://{hostname}:{port}")
+                        BaseAddress = new Uri($"{scheme}://{hostname}:{port}")
                     };
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -142,14 +142,14 @@ namespace Akka.Cluster.Management.Cli
                 }
             });
 
-        internal static int GetMemberStatus(string hostname, int port, string nodeUrl) =>
+        internal static int GetMemberStatus(string scheme, string hostname, int port, string nodeUrl) =>
             Execute(async () =>
             {
                 try
                 {
                     using var client = new HttpClient
                     {
-                        BaseAddress = new Uri($"http://{hostname}:{port}")
+                        BaseAddress = new Uri($"{scheme}://{hostname}:{port}")
                     };
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -172,14 +172,14 @@ namespace Akka.Cluster.Management.Cli
                 }
             });
 
-        internal static int GetMembers(string hostname, int port) =>
+        internal static int GetMembers(string scheme, string hostname, int port) =>
             Execute(async () =>
             {
                 try
                 {
                     using var client = new HttpClient
                     {
-                        BaseAddress = new Uri($"http://{hostname}:{port}")
+                        BaseAddress = new Uri($"{scheme}://{hostname}:{port}")
                     };
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -202,14 +202,14 @@ namespace Akka.Cluster.Management.Cli
                 }
             });
 
-        internal static int GetUnreachable(string hostname, int port, bool useFilter = false) =>
+        internal static int GetUnreachable(string scheme, string hostname, int port, bool useFilter = false) =>
             Execute(async () =>
             {
                 try
                 {
                     using var client = new HttpClient
                     {
-                        BaseAddress = new Uri($"http://{hostname}:{port}")
+                        BaseAddress = new Uri($"{scheme}://{hostname}:{port}")
                     };
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

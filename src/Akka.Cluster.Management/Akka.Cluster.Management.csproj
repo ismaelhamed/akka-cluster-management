@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
         <LangVersion>8</LangVersion>
-        <PackageVersion>0.7.2</PackageVersion>
+        <PackageVersion>0.7.3</PackageVersion>
         <Title>Akka.Cluster.Management</Title>
         <Authors>Ismael Hamed</Authors>
         <Description>Akka Cluster HTTP Management is a module that allows you interaction with an akka-cluster through an HTTP interface.</Description>
@@ -12,6 +12,7 @@
         <RepositoryUrl>https://github.com/ismaelhamed/akka-cluster-management</RepositoryUrl>
         <PackageTags>akka akka-cluster management operations ops microservices</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Version>0.7.3</Version>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,9 +23,11 @@
     <PackageReference Include="Akka.Cluster.Sharding" Version="1.4.10" />
     <PackageReference Include="Dynamitey" Version="2.0.10.189" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.HttpsPolicy" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="3.7.0">
+    <PackageReference Include="Microsoft.AspNetCore.Server.HttpSys" Version="2.2.6" />
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="3.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

@@ -12,6 +12,7 @@ namespace Akka.Cluster.Management.Cli
     {
         private static readonly string DefaultHostname = ConfigurationManager.AppSettings["hostname"] ?? "127.0.0.1";
         private static readonly string DefaultPort = ConfigurationManager.AppSettings["port"] ?? "19999";
+        private static readonly string Scheme = ConfigurationManager.AppSettings["scheme"] ?? "http";
 
         private static int Main(string[] args)
         {
@@ -54,7 +55,7 @@ Examples: .\akka-cluster --hostname localhost --port 19999 unreachable
                     var port = int.Parse(portArgument.Value() ?? DefaultPort);
                     var nodeUrl = nodeUrlArgument.Value;
 
-                    return ClusterClient.JoinMember(hostName, port, nodeUrl);
+                    return ClusterClient.JoinMember(Scheme, hostName, port, nodeUrl);
                 });
             });
 
@@ -70,7 +71,7 @@ Examples: .\akka-cluster --hostname localhost --port 19999 unreachable
                     var port = int.Parse(portArgument.Value() ?? DefaultPort);
                     var nodeUrl = nodeUrlArgument.Value;
 
-                    return ClusterClient.LeaveMember(hostName, port, nodeUrl);
+                    return ClusterClient.LeaveMember(Scheme, hostName, port, nodeUrl);
                 });
             });
 
@@ -86,7 +87,7 @@ Examples: .\akka-cluster --hostname localhost --port 19999 unreachable
                     var port = int.Parse(portArgument.Value() ?? DefaultPort);
                     var nodeUrl = nodeUrlArgument.Value;
 
-                    return ClusterClient.DownMember(hostName, port, nodeUrl);
+                    return ClusterClient.DownMember(Scheme, hostName, port, nodeUrl);
                 });
             });
 
@@ -102,7 +103,7 @@ Examples: .\akka-cluster --hostname localhost --port 19999 unreachable
                     var port = int.Parse(portArgument.Value() ?? DefaultPort);
                     var useFilter = curateArgument.HasValue();
 
-                    return ClusterClient.GetClusterStatus(hostName, port, useFilter);
+                    return ClusterClient.GetClusterStatus(Scheme, hostName, port, useFilter);
                 });
             });
 
@@ -118,7 +119,7 @@ Examples: .\akka-cluster --hostname localhost --port 19999 unreachable
                     var port = int.Parse(portArgument.Value() ?? DefaultPort);
                     var nodeUrl = nodeUrlArgument.Value;
 
-                    return ClusterClient.GetMemberStatus(hostName, port, nodeUrl);
+                    return ClusterClient.GetMemberStatus(Scheme, hostName, port, nodeUrl);
                 });
             });
 
@@ -131,7 +132,7 @@ Examples: .\akka-cluster --hostname localhost --port 19999 unreachable
                     var hostName = hostNameArgument.Value() ?? DefaultHostname;
                     var port = int.Parse(portArgument.Value() ?? DefaultPort);
 
-                    return ClusterClient.GetMembers(hostName, port);
+                    return ClusterClient.GetMembers(Scheme, hostName, port);
                 });
             });
 
@@ -147,7 +148,7 @@ Examples: .\akka-cluster --hostname localhost --port 19999 unreachable
                     var port = int.Parse(portArgument.Value() ?? DefaultPort);
                     var useFilter = curateArgument.HasValue();
 
-                    return ClusterClient.GetUnreachable(hostName, port, useFilter);
+                    return ClusterClient.GetUnreachable(Scheme, hostName, port, useFilter);
                 });
             });
 

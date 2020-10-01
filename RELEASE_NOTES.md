@@ -1,3 +1,8 @@
+#### 0.7.3 October 1 2020 ####
+
+Added support for HTTPS
+Upgraded to Akka v1.4.10
+
 #### 0.7.2 July 25 2020 ####
 
 NetStandard 2.0
