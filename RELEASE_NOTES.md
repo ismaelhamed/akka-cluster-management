@@ -1,3 +1,7 @@
+#### 0.7.3 November 28 2020 ####
+
+Upgraded to Akka v1.4.12
+
 #### 0.7.2 July 25 2020 ####
 
 NetStandard 2.0
