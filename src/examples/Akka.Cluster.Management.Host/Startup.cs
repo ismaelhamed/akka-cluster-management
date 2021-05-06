@@ -39,7 +39,7 @@ namespace Akka.Cluster.Management.Host
                     settings: ClusterShardingSettings.Create(actorSystem),
                     messageExtractor: new MessageExtractor());
 
-                Enumerable.Range(1, 100).ForEach(i => shardRegion.Tell(new ShardEnvelope(Guid.NewGuid().ToString(), "hello!")));
+                Enumerable.Range(1, 100).ForEach(i => shardRegion.Tell(new ShardingEnvelope(Guid.NewGuid().ToString(), "hello!")));
             });
 
             return Task.CompletedTask;
@@ -52,18 +52,6 @@ namespace Akka.Cluster.Management.Host
         }
     }
 
-    internal sealed class ShardEnvelope
-    {
-        public readonly string EntityId;
-        public readonly object Message;
-
-        public ShardEnvelope(string entityId, object message)
-        {
-            EntityId = entityId;
-            Message = message;
-        }
-    }
-
     internal sealed class MessageExtractor : HashCodeMessageExtractor
     {
         public MessageExtractor()
@@ -73,15 +61,24 @@ namespace Akka.Cluster.Management.Host
         public override string EntityId(object message) =>
             message switch
             {
-                ShardEnvelope e => e.EntityId,
+                ShardingEnvelope e => e.EntityId,
                 ShardRegion.StartEntity start => start.EntityId,
                 _ => null
             };
 
-        public new object EntityMessage(object message) => ( message as ShardEnvelope )?.Message ?? message;
+        public new object EntityMessage(object message) => (message as ShardingEnvelope)?.Message ?? message;
     }
 
-    internal class MyActor : ReceiveActor
+    internal class MyActor : UntypedActor
     {
+        protected override void OnReceive(object message)
+        {
+            switch (message)
+            {
+                default:
+                    /* ignore */
+                    break;
+            }
+        }
     }
 }
