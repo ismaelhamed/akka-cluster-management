@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{14
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Management.Cli.Tests", "Akka.Cluster.Management.Cli.Tests\Akka.Cluster.Management.Cli.Tests.csproj", "{B2226B7A-690A-4728-BE42-7E418987EBAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Cluster.Management", "Akka.Cluster.Management\Akka.Cluster.Management.csproj", "{B3064B7F-4C76-4A0E-8B4D-365F146F4223}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Management", "Akka.Cluster.Management\Akka.Cluster.Management.csproj", "{B3064B7F-4C76-4A0E-8B4D-365F146F4223}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Cluster.Management.Host", "examples\Akka.Cluster.Management.Host\Akka.Cluster.Management.Host.csproj", "{9E46FD13-5A61-4AE7-B945-4A65980AA467}"
 EndProject

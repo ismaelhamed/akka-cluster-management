@@ -26,10 +26,6 @@
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="3.7.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
 </Project>
