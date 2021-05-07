@@ -47,7 +47,7 @@ namespace Akka.Cluster.Management.Host
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            ClusterHttpManagement.Get(actorSystem).Stop();
+            //ClusterHttpManagement.Get(actorSystem).Stop();
             return CoordinatedShutdown.Get(actorSystem).Run(CoordinatedShutdown.ClrExitReason.Instance);
         }
     }

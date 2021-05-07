@@ -7,7 +7,7 @@ namespace Akka.Cluster.Management
         public readonly string Status;
         public readonly string[] Roles;
 
-        public static ClusterMember Empty => new ClusterMember();
+        public static ClusterMember Empty => new();
 
         public ClusterMember()
         { }

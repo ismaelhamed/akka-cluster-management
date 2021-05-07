@@ -8,6 +8,8 @@ using Akka.Cluster.Sharding;
 
 namespace Akka.Cluster.Management
 {
+    #region Messages
+
     public class GetMembers
     { }
 
@@ -63,6 +65,8 @@ namespace Akka.Cluster.Management
         }
     }
 
+    #endregion
+
     public class ClusterHttpManagementRoutes : UntypedActor
     {
         private readonly Cluster cluster;
@@ -76,28 +80,26 @@ namespace Akka.Cluster.Management
         {
             switch (message)
             {
-                case GetMembers _:
+                case GetMembers:
                     {
                         dynamic c = new Dynamitey.DynamicObjects.Get(cluster);
                         dynamic readView = new Dynamitey.DynamicObjects.Get(c.ReadView);
                         dynamic reachability = new Dynamitey.DynamicObjects.Get(readView.Reachability);
                         dynamic state = new Dynamitey.DynamicObjects.Get(readView.State);
 
-                        var members = ((IEnumerable)readView.State.Members).Cast<dynamic>().Select(m =>
-                        {
-                            var member = (Member)m;
-                            return MemberToClusterMember(member);
-                        });
+                        var members = ((IEnumerable)readView.State.Members).Cast<dynamic>()
+                            .Select(m => MemberToClusterMember((Member)m));
 
-                        var unreachable = ((IEnumerable)reachability.ObserversGroupedByUnreachable).Cast<dynamic>().Select(o =>
-                        {
-                            var pair = (KeyValuePair<UniqueAddress, ImmutableHashSet<UniqueAddress>>)o;
-                            return new ClusterUnreachableMember(pair.Key.Address.ToString(), pair.Value.Select(address => address.Address.ToString()).ToArray());
-                        });
+                        var unreachable = ((IEnumerable)reachability.ObserversGroupedByUnreachable).Cast<dynamic>()
+                            .Select(o =>
+                            {
+                                var pair = (KeyValuePair<UniqueAddress, ImmutableHashSet<UniqueAddress>>)o;
+                                return new ClusterUnreachableMember(pair.Key.Address.ToString(), pair.Value.Select(address => address.Address.ToString()).ToArray());
+                            });
 
                         var leader = ((Address)state.Leader).ToString();
                         var oldest = cluster.State.Members.Where(node => node.Status == MemberStatus.Up)
-                            .OrderBy(member => member, MemberExt.AgeOrdering)
+                            .OrderBy(member => member, Member.AgeOrdering)
                             .Select(m => m.Address.ToString())
                             .Last(); // we are only interested in the oldest one that is still Up
 
@@ -163,7 +165,7 @@ namespace Akka.Cluster.Management
                         {
                             ClusterSharding.Get(cluster.System)
                                 .ShardRegion(shardInfo.Name)
-                                .Ask<ShardRegionStats>(GetShardRegionStats.Instance, TimeSpan.FromSeconds(5))
+                                .Ask<ShardRegionStats>(GetShardRegionStats.Instance)
                                 .PipeTo(Sender, success: stats => new Complete.Success(new ShardDetails(stats.Stats.Select(stat => new ShardRegionInfo(stat.Key, stat.Value)).ToArray())));
                         }
                         catch (AskTimeoutException)
@@ -180,7 +182,7 @@ namespace Akka.Cluster.Management
         }
 
         private static ClusterMember MemberToClusterMember(Member member) =>
-            new ClusterMember(member.UniqueAddress.Address.ToString(), member.UniqueAddress.Uid.ToString(), member.Status.ToString(), member.Roles.ToArray());
+            new(member.UniqueAddress.Address.ToString(), member.UniqueAddress.Uid.ToString(), member.Status.ToString(), member.Roles.ToArray());
     }
 
     public class MemberExt
@@ -188,7 +190,7 @@ namespace Akka.Cluster.Management
         /// <summary>
         /// Compares members by their upNumber to determine which is oldest / youngest.
         /// </summary>
-        public static readonly AgeComparer AgeOrdering = new AgeComparer();
+        public static readonly AgeComparer AgeOrdering = new();
 
         public class AgeComparer : IComparer<Member>
         {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28822.285
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Cluster.Management.Cli", "Akka.Cluster.Management.Cli\Akka.Cluster.Management.Cli.csproj", "{99A1864A-E1F3-466C-B12C-A30EC554C867}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Management.Cli", "Akka.Cluster.Management.Cli\Akka.Cluster.Management.Cli.csproj", "{99A1864A-E1F3-466C-B12C-A30EC554C867}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9897A0A9-B4E7-4438-97D2-8D253A6132C1}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Management.Cli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Management", "Akka.Cluster.Management\Akka.Cluster.Management.csproj", "{B3064B7F-4C76-4A0E-8B4D-365F146F4223}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Akka.Cluster.Management.Host", "examples\Akka.Cluster.Management.Host\Akka.Cluster.Management.Host.csproj", "{9E46FD13-5A61-4AE7-B945-4A65980AA467}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Management.Host", "examples\Akka.Cluster.Management.Host\Akka.Cluster.Management.Host.csproj", "{9E46FD13-5A61-4AE7-B945-4A65980AA467}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Http.Schim", "Akka.Http.Schim\Akka.Http.Schim.csproj", "{9CD4EC15-8099-4ABF-B9EE-66ABD9357AEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{9E46FD13-5A61-4AE7-B945-4A65980AA467}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E46FD13-5A61-4AE7-B945-4A65980AA467}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E46FD13-5A61-4AE7-B945-4A65980AA467}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CD4EC15-8099-4ABF-B9EE-66ABD9357AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD4EC15-8099-4ABF-B9EE-66ABD9357AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD4EC15-8099-4ABF-B9EE-66ABD9357AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD4EC15-8099-4ABF-B9EE-66ABD9357AEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

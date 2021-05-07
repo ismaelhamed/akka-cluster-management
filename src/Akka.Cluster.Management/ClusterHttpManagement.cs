@@ -1,29 +1,25 @@
+using System;
+using System.Net;
+using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Configuration;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace Akka.Cluster.Management
 {
-    /// <inheritdoc />
+    using Http = Http.Dsl.Http;
+
     /// <summary>
-    /// Class to instantiate an {Akka.Cluster.Http.Management.ClusterHttpManagement} to provide an HTTP management interface for {Akka.Cluster.Cluster}.
+    /// Class to instantiate a <see cref="ClusterHttpManagement"/> to provide an HTTP management interface for Akka <seealso cref="Cluster"/>.
     /// </summary>
     public class ClusterHttpManagement : IExtension
     {
-        private IWebHost host;
+        private readonly ActorSystem system;
         private readonly string pathPrefix;
 
         public ClusterHttpManagementSettings Settings { get; }
 
-        /// <inheritdoc />
         /// <summary>
-        /// Creates an instance of {Akka.Cluster.Http.Management.ClusterHttpManagement} to manage the specified {Akka.Cluster.Cluster} instance. 
+        /// Creates an instance of <see cref="ClusterHttpManagement"/> to manage the specified <seealso cref="Cluster"/> instance.
         /// This version does not provide security (Basic Authentication or SSL) and uses the default path "members".
         /// </summary>
         public ClusterHttpManagement(ExtendedActorSystem system)
@@ -31,16 +27,16 @@ namespace Akka.Cluster.Management
         { }
 
         /// <summary>
-        /// Creates an instance of {Akka.Cluster.Http.Management.ClusterHttpManagement} to manage the specified {Akka.Cluster.Cluster} instance. 
+        /// Creates an instance of <see cref="ClusterHttpManagement"/> to manage the specified <seealso cref="Cluster"/> instance.
         /// This version does not provide security (Basic Authentication or SSL) and it uses the specified path "pathPrefix".
         /// </summary>
         public ClusterHttpManagement(ExtendedActorSystem system, string pathPrefix)
         {
+            this.system = system;
             this.pathPrefix = pathPrefix;
 
             system.Settings.InjectTopLevelFallback(DefaultConfiguration());
             Settings = new ClusterHttpManagementSettings(system.Settings.Config.GetConfig(ClusterHttpManagementSettings.ConfigPath));
-            SystemActors.RoutesHandler = system.ActorOf(ClusterHttpManagementRoutes.Props(Cluster.Get(system)), "routes");
         }
 
         public static ClusterHttpManagement Get(ActorSystem system) =>
@@ -51,34 +47,32 @@ namespace Akka.Cluster.Management
 
         public void Start()
         {
-            host = WebHost.CreateDefaultBuilder()
-                .SuppressStatusMessages(true)
-                .ConfigureServices(services =>
-                {
-                    services.AddMvcCore()
-                        .AddFormatterMappings()
-                        .AddJsonFormatters()
-                        .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            var routes = Routes.Create(Cluster.Get(system));
 
-                    services.AddLogging(builder => builder.AddFilter("Microsoft", LogLevel.Warning));
-                })
-                .Configure(app =>
+            var bindingTask = Http.Get(system).NewServerAt("localhost", 8085).Bind(routes.RequestHandler);
+            bindingTask.WhenComplete((binding, exception) =>
+            {
+                if (binding != null)
                 {
-                    app.UsePathBase(new PathString(pathPrefix));
-                    app.UseMvc();
-                })
-                // NOTE: This module does not provide security by default. It's the developer's choice to add security to this API.
-                .UseUrls($"http://{Settings.ClusterHttpManagementHostname}:{Settings.ClusterHttpManagementPort}")
-                .Build();
+                    var address = (DnsEndPoint)binding.LocalAddress;
+                    system.Log.Info("Server online at http://{0}:{1}/",
+                        address.Host,
+                        address.Port);
 
-            host.Start();
+                    // make sure Akka HTTP is shut down in a proper way
+                    binding.AddToCoordinatedShutdown(TimeSpan.FromSeconds(10), system);
+                }
+                else
+                {
+                    system.Log.Error(exception, "Failed to bind HTTP endpoint, terminating system...");
+                    system.Terminate();
+                }
+            });
         }
-
-        public void Stop() => host.StopAsync().Wait();
     }
 
     public class ClusterHttpManagementExtensionProvider : ExtensionIdProvider<ClusterHttpManagement>
     {
-        public override ClusterHttpManagement CreateExtension(ExtendedActorSystem system) => new ClusterHttpManagement(system);
+        public override ClusterHttpManagement CreateExtension(ExtendedActorSystem system) => new(system);
     }
 }

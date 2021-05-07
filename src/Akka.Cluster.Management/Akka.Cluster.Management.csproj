@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>netstandard2.0</TargetFramework>
-        <LangVersion>8</LangVersion>
+        <LangVersion>9</LangVersion>
         <PackageVersion>0.7.4</PackageVersion>
         <Title>Akka.Cluster.Management</Title>
         <Authors>Ismael Hamed</Authors>
@@ -17,6 +17,16 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Controllers\**" />
+      <EmbeddedResource Remove="Controllers\**" />
+      <None Remove="Controllers\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="SystemActors.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
       <EmbeddedResource Include="reference.conf" />
     </ItemGroup>
 
@@ -26,6 +36,10 @@
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Akka.Http.Schim\Akka.Http.Schim.csproj" />
   </ItemGroup>
 
 </Project>
