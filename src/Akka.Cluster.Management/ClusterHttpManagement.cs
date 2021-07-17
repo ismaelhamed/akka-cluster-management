@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Akka.Cluster.Management
 {
@@ -55,10 +57,22 @@ namespace Akka.Cluster.Management
                 .SuppressStatusMessages(true)
                 .ConfigureServices(services =>
                 {
-                    services.AddMvcCore()
+                    services
+                        .AddMvcCore()
                         .AddFormatterMappings()
+#if NETCOREAPP
+                        .AddMvcOptions(options => options.EnableEndpointRouting = false)
+                        .AddNewtonsoftJson(options =>
+                        {
+                            options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                            options.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Include;
+                            options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                        })
+                        .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+#else
                         .AddJsonFormatters()
                         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+#endif                        
 
                     services.AddLogging(builder => builder.AddFilter("Microsoft", LogLevel.Warning));
                 })

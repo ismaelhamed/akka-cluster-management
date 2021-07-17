@@ -1,3 +1,8 @@
+#### 0.8.0 July 16 2021 ####
+
+Upgraded to Akka v1.4.21
+Support .NET Core 3.1
+
 #### 0.7.4 May 6 2021 ####
 
 Upgraded to Akka v1.4.19

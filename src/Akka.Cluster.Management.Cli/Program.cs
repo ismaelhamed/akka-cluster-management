@@ -28,7 +28,7 @@ namespace Akka.Cluster.Management.Cli
             {
                 Name = "akka-cluster",
                 FullName = "Akka Management Cluster HTTP",
-                ShortVersionGetter = () => Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyFileVersionAttribute>().Version,
+                ShortVersionGetter = () => Assembly.GetExecutingAssembly().GetName().Version.ToString(3),
                 ExtendedHelpText = @"
 Where the <node-url> should be on the format of
   'akka.<protocol>://<actor-system-name>@<hostname>:<port>'
