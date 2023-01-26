@@ -16,6 +16,7 @@
     <PropertyGroup>
       <XunitVersion>2.4.2</XunitVersion>
       <AkkaVersion>1.4.48</AkkaVersion>
+      <FluentAssertionsVersion>6.9.0</FluentAssertionsVersion>
       <TestSdkVersion>17.3.2</TestSdkVersion>
       <NetStandardLibVersion>netstandard2.0</NetStandardLibVersion>
       <NetCoreTestVersion>netcoreapp3.1</NetCoreTestVersion>
