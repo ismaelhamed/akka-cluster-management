@@ -1,19 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.0;netstandard2.0</TargetFrameworks>
-    <LangVersion>8</LangVersion>
-    <PackageVersion>0.8.0</PackageVersion>
+    <TargetFrameworks>$(NetCoreTestVersion);$(NetStandardLibVersion)</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
     <Title>Akka.Cluster.Management</Title>
-    <Authors>Ismael Hamed</Authors>
-    <Description>Akka Cluster HTTP Management is a module that allows you interaction with an akka-cluster through an HTTP interface.</Description>
-    <Copyright>Copyright © 2021 Ismael Hamed</Copyright>
-    <PackageProjectUrl>https://github.com/ismaelhamed/akka-cluster-management</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/ismaelhamed/akka-cluster-management</RepositoryUrl>
-    <PackageTags>akka akka-cluster management operations ops microservices</PackageTags>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.8.0</Version>
-    <Company />
   </PropertyGroup>
 
   <ItemGroup>
@@ -32,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Akka.Cluster.Sharding" Version="1.4.21" />
+    <PackageReference Include="Akka.Cluster.Sharding" Version="$(AkkaVersion)" />
     <PackageReference Include="Dynamitey" Version="2.0.10.189" />
   </ItemGroup>
 

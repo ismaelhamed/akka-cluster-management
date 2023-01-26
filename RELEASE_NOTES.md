@@ -1,3 +1,7 @@
+#### 0.8.1 January 26 2023 ####
+
+Upgraded to Akka v1.4.48
+
 #### 0.8.0 July 16 2021 ####
 
 Upgraded to Akka v1.4.21

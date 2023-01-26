@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+#if NETCOREAPP
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+#endif
 
 namespace Akka.Cluster.Management
 {
@@ -72,7 +74,7 @@ namespace Akka.Cluster.Management
 #else
                         .AddJsonFormatters()
                         .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-#endif                        
+#endif
 
                     services.AddLogging(builder => builder.AddFilter("Microsoft", LogLevel.Warning));
                 })

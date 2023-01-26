@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Akka.Cluster.Management", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Host48", "examples\Akka.Cluster.Management.Host\Host48.csproj", "{9E46FD13-5A61-4AE7-B945-4A65980AA467}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HostCore", "examples\HostCore\HostCore.csproj", "{DF4896EB-D983-4C79-AAD1-2B332CE7048C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HostCore", "examples\HostCore\HostCore.csproj", "{DF4896EB-D983-4C79-AAD1-2B332CE7048C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

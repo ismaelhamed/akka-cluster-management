@@ -1,0 +1,38 @@
+<Project>
+    <PropertyGroup>
+        <Authors>Ismael Hamed</Authors>
+        <VersionPrefix>0.8.1</VersionPrefix>
+        <Description>Akka Cluster HTTP Management is a module that allows you interaction with an akka-cluster through an HTTP interface.</Description>
+        <Copyright>Copyright © 2023 Ismael Hamed</Copyright>
+        <PackageProjectUrl>https://github.com/ismaelhamed/akka-cluster-management</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/ismaelhamed/akka-cluster-management/blob/dev/LICENSE</PackageLicenseUrl>
+        <PackageTags>akka akka-cluster management operations ops microservices</PackageTags>
+        <PackageReleaseNotes>Updated to Akka.Persistence v1.4.48</PackageReleaseNotes>
+        <PackageVersion>0.8.1</PackageVersion>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <NoWarn>$(NoWarn);CS1591;xUnit1013</NoWarn>
+    </PropertyGroup>
+
+    <PropertyGroup>
+      <XunitVersion>2.4.2</XunitVersion>
+      <AkkaVersion>1.4.48</AkkaVersion>
+      <TestSdkVersion>17.3.2</TestSdkVersion>
+      <NetStandardLibVersion>netstandard2.0</NetStandardLibVersion>
+      <NetCoreTestVersion>netcoreapp3.1</NetCoreTestVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <RepositoryUrl>https://github.com/ismaelhamed/akka-cluster-management</RepositoryUrl>
+      <EmbedUntrackedSources>true</EmbedUntrackedSources>
+      <IncludeSymbols>true</IncludeSymbols>
+      <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DefineConstants>$(DefineConstants);RELEASE</DefineConstants>
+    </PropertyGroup>
+  </Project>

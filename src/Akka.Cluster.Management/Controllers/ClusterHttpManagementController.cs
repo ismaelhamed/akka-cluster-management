@@ -4,8 +4,6 @@ using Akka.Actor;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-#pragma warning disable 1573
-
 namespace Akka.Cluster.Management.Controllers
 {
     [Route("")]
